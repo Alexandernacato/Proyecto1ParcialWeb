@@ -1,6 +1,7 @@
 package com.mycompany.sistemaforestalfinal.controller;
 
 import com.mycompany.sistemaforestalfinal.model.TipoBosque;
+import com.mycompany.sistemaforestalfinal.model.Usuario;
 import com.mycompany.sistemaforestalfinal.model.Zone;
 import com.mycompany.sistemaforestalfinal.service.ZoneService;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -23,7 +25,28 @@ public class ZoneController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String option = request.getParameter("option");
+          HttpSession session = request.getSession(false);
+    if (session == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+    Usuario usuario = (Usuario) session.getAttribute("usuario");
+    if (usuario == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+    String rol = usuario.getRol();
+
+    String option = request.getParameter("option");
+    if (option == null) option = "list";
+
+    // Bloquear operaciones CRUD a no admins
+    if (option.equals("new") || option.equals("update") || option.equals("delete")) {
+        if (!"admin".equals(rol)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso denegado.");
+            return;
+        }
+    }
         if (option == null) option = "findAll";
 
         try {
