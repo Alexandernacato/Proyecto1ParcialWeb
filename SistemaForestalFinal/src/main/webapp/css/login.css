@@ -1,0 +1,90 @@
+/* Fondo con imagen de bosque */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    position: relative;
+}
+
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+    background-size: cover;
+    filter: brightness(0.4) saturate(1.2);
+    z-index: -1;
+}
+
+.login-container {
+    background: rgba(69, 123, 157, 0.85); /* azul semitransparente */
+    padding: 2.5rem 3rem;
+    border-radius: 12px;
+    width: 380px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 auto;
+    color: #f1faee;
+}
+
+h2 {
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: none;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3) inset;
+    background: rgba(241, 250, 238, 0.9);
+    color: #1d3557;
+    font-weight: 500;
+    transition: box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: 0 0 8px #a8dadc;
+    background: #fff;
+}
+
+.btn-login {
+    background-color: #a8dadc;
+    border: none;
+    font-weight: 700;
+    color: #1d3557;
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(168, 218, 220, 0.6);
+}
+
+.btn-login:hover {
+    background-color: #88c6c9;
+    color: #142f44;
+    transform: translateY(-2px);
+}
+
+.error-msg {
+    background: #e63946;
+    color: white;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 0 10px rgba(230, 57, 70, 0.8);
+}
