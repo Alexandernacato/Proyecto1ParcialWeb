@@ -52,8 +52,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${pageContext.request.servletPath eq '/TreeSpecies' ? 'active' : ''}" 
-                       href="${pageContext.request.contextPath}/TreeSpecies">
+                    <a class="nav-link ${pageContext.request.servletPath eq '/treespecies' ? 'active' : ''}" 
+                       href="${pageContext.request.contextPath}/treespecies">
                         <i class="fas fa-seedling"></i> Especies
                     </a>
                 </li>               

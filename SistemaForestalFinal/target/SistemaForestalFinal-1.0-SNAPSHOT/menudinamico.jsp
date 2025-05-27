@@ -48,7 +48,7 @@
                 <li class="nav-item"><a class="nav-link <%= path.equals("/Index.jsp") ? "active" : "" %>" href="${pageContext.request.contextPath}/Index.jsp"><i class="fas fa-home"></i> Inicio</a></li>
                 <li class="nav-item"><a class="nav-link <%= path.equals("/reportes") ? "active" : "" %>" href="${pageContext.request.contextPath}/reportes"><i class="fas fa-chart-column"></i> Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link <%= path.equals("/zones") ? "active" : "" %>" href="${pageContext.request.contextPath}/zones"><i class="fas fa-map-marked-alt"></i> Zonas</a></li>
-                <li class="nav-item"><a class="nav-link <%= path.equals("/treeSpecies") ? "active" : "" %>" href="${pageContext.request.contextPath}/treeSpecies"><i class="fas fa-seedling"></i> Especies</a></li>
+                <li class="nav-item"><a class="nav-link <%= path.equals("/treespecies") ? "active" : "" %>" href="${pageContext.request.contextPath}/treespecies"><i class="fas fa-seedling"></i> Especies</a></li>
                 <li class="nav-item"><a class="nav-link <%= path.equals("/ConservationActivities") ? "active" : "" %>" href="${pageContext.request.contextPath}/ConservationActivities"><i class="fas fa-book-open"></i> Actividades</a></li>
                 <li class="nav-item"><a class="nav-link text-danger" href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>
