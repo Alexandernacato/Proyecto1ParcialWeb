@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ include file="menudinamico.jsp" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,31 +15,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-    <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/AdminIndex.jsp">
-            <i class="fas fa-user-shield"></i> Admin Forestal
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarMain" aria-controls="navbarMain"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarMain">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/reportes"><i class="fas fa-chart-line"></i> Reportes</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/usuarios"><i class="fas fa-users-cog"></i> Usuarios</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/actividades"><i class="fas fa-leaf"></i> Actividades</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/zonas"><i class="fas fa-map"></i> Zonas</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/especies"><i class="fas fa-seedling"></i> Especies</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
 <!-- DASHBOARD -->
 <main class="admin-dashboard container mt-5">
