@@ -13,7 +13,17 @@
 <body>
 <div class="container mt-5">
     <h2 class="text-center mb-4">Lista de Especies de Árbol</h2>
-    <a href="${pageContext.request.contextPath}/treespecies?option=new" class="btn btn-primary mb-3" id="abrirModal">Agregar Nueva Especie</a>
+<c:choose>
+    <c:when test="${sessionScope.userRole eq 'admin'}">
+        <!-- Solo el administrador puede abrir el modal para agregar especie -->
+        <a href="${pageContext.request.contextPath}/treespecies?option=new" class="btn btn-primary mb-3" id="abrirModal">Agregar Nueva Especie</a>
+    </c:when>
+    <c:otherwise>
+        <!-- Usuarios no administradores reciben una alerta -->
+        <button type="button" class="btn btn-secondary mb-3" onclick="alert('Acceso denegado. Solo los administradores pueden agregar especies.')">Agregar Nueva Especie</button>
+    </c:otherwise>
+</c:choose>
+
 
     <table id="speciesTable" class="table table-bordered table-striped">
         <thead>
@@ -44,8 +54,27 @@
                     </td>
                     <td>${sp.activo ? "Sí" : "No"}</td>
                     <td>
-                        <a href="${pageContext.request.contextPath}/treespecies?option=update&id=${sp.id}" class="btn btn-warning btn-sm editarBtn">Editar</a>
-                        <a href="${pageContext.request.contextPath}/treespecies?option=delete&id=${sp.id}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta especie?')">Eliminar</a>
+                        <c:choose>
+    <c:when test="${sessionScope.userRole eq 'admin'}">
+        <!-- Solo los administradores pueden editar -->
+        <a href="${pageContext.request.contextPath}/treespecies?option=update&id=${sp.id}" class="btn btn-warning btn-sm editarBtn">Editar</a>
+    </c:when>
+    <c:otherwise>
+        <!-- Los usuarios no administradores no tienen acceso a editar -->
+        <button type="button" class="btn btn-warning btn-sm" onclick="alert('Acceso denegado. Solo los administradores pueden editar especies.')">Editar</button>
+    </c:otherwise>
+</c:choose>
+
+                       <c:choose>
+    <c:when test="${sessionScope.userRole eq 'admin'}">
+        <!-- Solo los administradores pueden eliminar -->
+        <a href="${pageContext.request.contextPath}/treespecies?option=delete&id=${sp.id}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta especie?')">Eliminar</a>
+    </c:when>
+    <c:otherwise>
+        <!-- Los usuarios no administradores no tienen acceso a eliminar -->
+        <button type="button" class="btn btn-danger btn-sm" onclick="alert('Acceso denegado. Solo los administradores pueden eliminar especies.')">Eliminar</button>
+    </c:otherwise>
+</c:choose>
                     </td>
                 </tr>
             </c:forEach>
