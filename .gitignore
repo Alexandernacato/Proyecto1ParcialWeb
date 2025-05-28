@@ -1,0 +1,140 @@
+# Archivos Markdown 
+*.md
+!README.md
+!Indicaciones.md
+!DeveloperTasks.md
+
+# Archivos temporales del sistema
+*.tmp
+*.temp
+*~
+.DS_Store
+Thumbs.db
+
+# Java - Archivos compilados
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+
+# Java - Archivos temporales
+hs_err_pid*
+replay_pid*
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# IDE - Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.externalToolBuilders/
+*.launch
+*.pydevproject
+.cproject
+.autotools
+.factorypath
+.buildpath
+.target
+.tern-project
+.texlipse
+.springBeans
+.recommenders/
+.apt_generated/
+.apt_generated_test/
+
+# IDE - NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# IDE - Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Servidor de aplicaciones
+/build/
+/dist/
+/target/
+
+# Tomcat
+Servers/
+
+# Archivos de log
+*.log
+logs/
+
+# Archivos de configuración sensibles
+config.properties
+database.properties
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos de backup
+*.backup
+*.bak
+*.old
+
+# Archivos del sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Archivos temporales de Office
+~$*
+*.docx#
+*.pptx#
+*.xlsx#
+
+# Carpetas de cache
+.cache/
+cache/
+temp/

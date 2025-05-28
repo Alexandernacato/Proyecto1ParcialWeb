@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class ConnectionBdd {
         private static final String URL = "jdbc:mysql://localhost:3306/sistemaforestalfinal?useSSL=false&allowPublicKeyRetrieval=true";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
     
     static {
         try {
