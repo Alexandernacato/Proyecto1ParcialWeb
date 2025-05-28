@@ -1,4 +1,4 @@
-# Archivos Markdown 
+# Archivos Markdown (ignorar todos excepto los especificados)
 *.md
 !README.md
 !Indicaciones.md
@@ -138,3 +138,37 @@ Thumbs.db
 .cache/
 cache/
 temp/
+
+# LaTeX - Archivos auxiliares y temporales
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.pdfsync
+*.alg
+*.lof
+*.lot
+*.idx
+*.ilg
+*.ind
+*.ist
+*.acn
+*.acr
+*.glg
+*.glo
+*.gls
+*.fls
+*.figlist
+*.makefile
+*.xdv
+auto/
+Docs/temp/build/
