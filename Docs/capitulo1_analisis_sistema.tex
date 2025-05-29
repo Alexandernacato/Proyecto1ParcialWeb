@@ -1,0 +1,110 @@
+\section{DOCUMENTO DE ANÁLISIS DEL SISTEMA}
+\subsection{Introducción}
+El manejo adecuado y sostenible de los recursos forestales es fundamental para la conservación del medio ambiente y la biodiversidad. En este contexto, el desarrollo de un Sistema de Registro Forestal se vuelve una herramienta esencial para gestionar de manera eficiente la información relacionada con las zonas forestales, las especies de árboles presentes y las actividades de conservación realizadas. Este sistema, basado en una arquitectura N-Capas y desarrollado con tecnologías Java EE y MySQL, permitirá a las organizaciones responsables del cuidado ambiental registrar, consultar y actualizar datos críticos, facilitando la toma de decisiones y el monitoreo continuo de los recursos forestales. Así, se contribuye a la protección ambiental y al cumplimiento de políticas y normativas relacionadas con la gestión forestal.
+
+\subsection{Objetivos y alcance}
+\subsubsection{Objetivo general}
+Desarrollar un Sistema de Registro Forestal que permita gestionar de manera eficiente la información relacionada con zonas forestales, especies de árboles y actividades de conservación, utilizando una arquitectura N-Capas con Java EE y MySQL.
+
+\subsubsection{Objetivos específicos}
+\begin{itemize}
+    \item Implementar módulos para el registro, consulta y actualización de datos de zonas forestales.
+    \item Desarrollar funcionalidades para gestionar información sobre diferentes especies de árboles.
+    \item Garantizar la integridad y seguridad de la información almacenada.
+    \item Proveer una interfaz amigable para los usuarios que facilite la interacción con el sistema.
+\end{itemize}
+
+\subsubsection{Alcance}
+El sistema de Registro Forestal que se desarrollará permitirá la gestión de información fundamental sobre zonas forestales, especies de árboles y actividades de conservación, facilitando el registro, consulta y actualización de estos datos mediante una interfaz sencilla. El enfoque principal está en apoyar las tareas administrativas y de monitoreo ambiental a nivel local o institucional, sin incluir funcionalidades avanzadas como integración con dispositivos de campo, generación de reportes complejos o sistemas de administración de usuarios avanzados.
+
+\subsection{Descripción general}
+El Sistema de Registro Forestal es una aplicación desarrollada con el objetivo de gestionar de manera eficiente la información relacionada con zonas forestales, especies de árboles y actividades de conservación. Este sistema permite registrar, consultar y actualizar datos relevantes, facilitando el seguimiento y control de los recursos forestales por parte de los usuarios encargados de su administración. Entre sus funcionalidades principales se encuentra la posibilidad de realizar consultas específicas sobre las zonas registradas, lo que permite un acceso rápido y organizado a la información.
+
+La implementación se realizó utilizando una arquitectura N-Capas, aplicando el patrón de diseño Modelo-Vista-Controlador (MVC), lo cual asegura una separación clara entre la lógica de presentación, lógica de negocio y acceso a datos, favoreciendo el mantenimiento y escalabilidad del sistema. Para el desarrollo del frontend se emplearon tecnologías como HTML, CSS y la biblioteca Bootstrap, lo que permitió una interfaz gráfica amigable y responsiva. El entorno de desarrollo utilizado incluyó el IDE NetBeans y el servidor de bases de datos MySQL gestionado a través de XAMPP, herramientas que facilitaron la implementación y prueba del sistema en un entorno local.
+
+Este sistema está orientado a ser usado, donde se requiere una herramienta confiable para el registro y seguimiento de información ambiental. Su diseño modular también permite futuras ampliaciones, como la integración de reportes o nuevos módulos funcionales.
+
+\subsection{Análisis del Dominio del Problema}
+El dominio del problema aborda la gestión de información ambiental relacionada con zonas forestales, especies de árboles y actividades de conservación, con el fin de apoyar procesos de monitoreo, protección y recuperación de áreas naturales. Actualmente, muchas organizaciones ambientales o unidades administrativas no cuentan con una herramienta digital adecuada para gestionar esta información, lo que limita la eficiencia operativa, la toma de decisiones basadas en datos y el cumplimiento de normativas ambientales.
+
+\subsubsection{Entidades Principales}
+El sistema está centrado en tres entidades clave:
+\begin{description}
+    \item[ZONAS:] Representa zonas geográficas donde se realizan actividades de conservación o se registran especies de árboles. Cada zona contiene información relevante como nombre, ubicación, provincia, tipo de bosque (Seco, Húmedo Tropical, Montano, Manglar, Otro), área en hectáreas y descripción.
+    \item[ESPECIES DE ÁRBOLES:] Incluyen información botánica sobre las especies registradas dentro de una zona, como nombre común, nombre científico, familia botánica, estado de conservación (enum), uso principal, altura máxima y zona.
+    \item[ACTIVIDADES:] Reflejan las acciones de manejo, conservación o intervención realizadas dentro de una zona. Esta entidad guarda información como el nombre de la actividad, fecha, responsable, tipo de actividad (enum), descripción, zona asociada y si está activa.
+\end{description}
+
+\subsubsection{Actores del Sistema}
+El actor del sistema representa a cualquier persona que utilice el sistema para registrar, consultar o modificar información sobre zonas forestales, especies y actividades, por lo que todas las funcionalidades están disponibles para el usuario del software.
+
+\textbf{Funciones del Actor del Sistema:}
+\begin{itemize}
+    \item Registra y consulta información relacionada con zonas forestales.
+    \item Ingresa especies de árboles identificadas en campo.
+    \item Registra las actividades de conservación realizadas.
+    \item Crea, edita y elimina registros de zonas, especies y actividades.
+\end{itemize}
+
+\subsubsection{Procesos del Negocio}
+Los procesos de negocio del sistema representan las actividades funcionales que permite realizar la aplicación. A continuación se describen:
+
+\textbf{Registrar Zona Forestal}
+\begin{description}
+    \item[Descripción:] Permite ingresar una nueva zona forestal con sus datos básicos.
+    \item[Entrada:] Nombre de la zona, ubicación, superficie, observaciones.
+    \item[Salida:] Zona almacenada en el sistema con estado activo.
+\end{description}
+
+\textbf{Registrar Especie de Árbol}
+\begin{description}
+    \item[Descripción:] Permite ingresar una especie de árbol identificada en una zona y se la asocia con la misma.
+    \item[Entrada:] Nombre común, nombre científico, características, zona relacionada.
+    \item[Salida:] Especie almacenada en el sistema con estado activo.
+\end{description}
+
+\textbf{Registrar Actividad de Conservación}
+\begin{description}
+    \item[Descripción:] Permite documentar actividades realizadas en una zona forestal.
+    \item[Entrada:] Tipo de actividad, descripción, fecha, zona correspondiente.
+    \item[Salida:] Actividad registrada en el sistema con estado activo.
+\end{description}
+
+\textbf{Editar Zona, Especie o Actividad}
+\begin{description}
+    \item[Descripción:] Permite modificar los datos previamente registrados de zonas forestales, especies de árboles o actividades de conservación.
+    \item[Entrada:] Registro seleccionado, nuevos datos a actualizar.
+    \item[Salida:] Registro actualizado.
+\end{description}
+
+\textbf{Borrado Lógico de Registros}
+\begin{description}
+    \item[Descripción:] Permite desactivar un registro sin eliminarlo físicamente de la base de datos (zona, especie o actividad).
+    \item[Entrada:] Identificador del registro a desactivar.
+    \item[Salida:] Registro marcado como inactivo o eliminado lógicamente.
+\end{description}
+
+\textbf{Consultar Registros}
+\begin{description}
+    \item[Descripción:] Permite buscar y filtrar información de zonas forestales, especies de árboles y actividades de conservación según distintos criterios.
+    \item[Entrada:] Criterios de búsqueda (nombre, fecha, zona, etc.).
+    \item[Salida:] Lista de registros que cumplen los criterios, incluyendo activos e inactivos si se desea.
+\end{description}
+
+\textbf{Visualizar Información de Registros}
+\begin{description}
+    \item[Descripción:] Permite al usuario ver en detalle la información de cualquier zona, especie o actividad registrada.
+    \item[Entrada:] Selección del registro a visualizar.
+    \item[Salida:] Información completa del registro en pantalla.
+\end{description}
+
+\subsection{Modelo Conceptual del Sistema}
+\placeholderfigure{Diagrama del Modelo Conceptual del Sistema}
+
+\subsection{Posibles Extensiones Futuras}
+El Sistema de Registro Forestal ha sido diseñado con una arquitectura modular que facilita su expansión y adaptación a nuevas necesidades. A continuación, se describen algunas posibles extensiones que podrían implementarse en el futuro:
+\begin{itemize}
+    \item \textbf{Módulo de Reportes Avanzados:} Este módulo permitiría la generación de reportes personalizados y dinámicos sobre zonas forestales, especies de árboles y actividades de conservación. Los usuarios podrían exportar estos reportes en diversos formatos, como PDF, Excel y CSV, y se incluirían gráficos y visualizaciones para facilitar el análisis de la información.
+    \item \textbf{Módulo de Gestión de Usuarios y Roles:} Este módulo se enfocaría en la implementación de un sistema de autenticación y autorización para controlar el acceso al sistema. Se definirían diferentes roles de usuario, cada uno con permisos específicos (por ejemplo, administrador, técnico de campo, investigador), y se registraría la actividad de los usuarios con fines de auditoría.
+    \item \textbf{Funcionalidad de Alertas y Notificaciones:} Este módulo permitiría a los usuarios configurar alertas automáticas para eventos importantes, como la detección de incendios o cambios significativos en el estado de conservación de una especie. El sistema podría enviar notificaciones por correo electrónico o a través de la interfaz de la aplicación, manteniendo a los usuarios informados sobre situaciones críticas que requieren atención.
+\end{itemize}

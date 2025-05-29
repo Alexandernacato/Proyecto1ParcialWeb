@@ -1,0 +1,135 @@
+\chapter{Manual del Desarrollador}
+\label{cap:manual}
+
+\section{Introducción}
+Este manual está diseñado para facilitar a los desarrolladores la comprensión, mantenimiento, mejora y ampliación del Sistema de Registro Forestal. El sistema está construido bajo una arquitectura de tipo N-Capas, lo que permite separar las responsabilidades y hacer el código más mantenible y escalable.
+
+El backend se desarrolla con Java EE, utilizando Servlets para la lógica del servidor y acceso a datos mediante JDBC. La base de datos relacional empleada es MySQL, gestionada localmente mediante XAMPP. El frontend se implementa con tecnologías web clásicas como JSP, HTML, CSS, y JavaScript, usando Bootstrap para asegurar una interfaz adaptativa y amigable en distintos dispositivos.
+
+Este documento describe la estructura del proyecto, flujo general del sistema, recomendaciones para el desarrollo y posibles extensiones futuras.
+
+\section{Tecnologías Utilizadas}
+\textbf{Backend:}
+\begin{itemize}
+    \item Java EE para la capa de negocio y controladores.
+    \item Servlets para el manejo de peticiones HTTP.
+    \item JDBC para la conexión y operaciones con la base de datos MySQL.
+\end{itemize}
+\textbf{Frontend:}
+\begin{itemize}
+    \item JSP para la generación dinámica de páginas web.
+    \item HTML5 y CSS3 para la estructura y estilos visuales.
+    \item Bootstrap para diseño responsivo y componentes UI.
+    \item JavaScript para validaciones y dinámicas en el cliente.
+\end{itemize}
+\textbf{Base de Datos:}
+\begin{itemize}
+    \item MySQL gestionado localmente con XAMPP, que facilita la administración del servidor de bases de datos en entornos de desarrollo.
+\end{itemize}
+\textbf{Entorno de Desarrollo:}
+\begin{itemize}
+    \item NetBeans IDE, plataforma recomendada por su integración con Java EE y soporte para JSP.
+\end{itemize}
+
+\section{Estructura del Proyecto}
+La organización del código sigue el patrón N-Capas para separar las responsabilidades en distintas carpetas y paquetes:
+\begin{description}
+    \item[\texttt{/Web Pages/}] Contiene las páginas JSP que forman la interfaz visible para el usuario.
+    \begin{itemize}
+        \item \texttt{index.jsp} — Página principal, punto de entrada del sistema.
+        \item \texttt{Zones.jsp} — Página para la gestión y visualización de zonas forestales.
+        \item \texttt{TreeSpecies.jsp} — Página para administrar las especies de árboles registradas.
+        \item \texttt{ConservationActivities.jsp} — Página para registrar y consultar actividades de conservación forestal.
+        \item \texttt{menu.jsp} — Componente común que contiene el menú de navegación para todo el sistema.
+        \item \texttt{footer.jsp} — Componente común que incluye el pie de página con información general.
+    \end{itemize}
+    \item[\texttt{/com/espe/sistemaregistroforestal/controller/} (Package Controller)] Paquete encargado de manejar las peticiones de los usuarios, Controladores que gestionan las solicitudes del cliente y comunican con la capa de servicios.
+    \begin{itemize}
+        \item \texttt{ZonesController.java} — Controlador para gestionar acciones relacionadas con zonas forestales (crear, actualizar, listar, eliminar).
+        \item \texttt{TreeSpeciesController.java} — Controlador para manejar la administración de especies de árboles.
+        \item \texttt{ConservationActivitiesController.java} — Controlador que gestiona el registro y mantenimiento de actividades de conservación.
+    \end{itemize}
+    \item[\texttt{/com/espe/sistemaregistroforestal/service/} (Package Service)] Aquí se implementa la lógica de negocio. La capa de servicio procesa la información recibida del controlador, ejecuta las reglas y llama a la capa DAO para interactuar con la base de datos.
+    \begin{itemize}
+        \item \texttt{ZonesService.java} — Implementa las reglas y operaciones relacionadas con las zonas forestales.
+        \item \texttt{TreeSpeciesService.java} — Procesa la información y lógica para el manejo de especies arbóreas.
+        \item \texttt{ConservationActivitiesService.java} — Maneja la lógica de las actividades de conservación, incluyendo validaciones específicas.
+    \end{itemize}
+    \item[\texttt{/com/espe/sistemaregistroforestal/dao/} (Package DAO)] La capa DAO (Data Access Object) es responsable de realizar todas las operaciones de persistencia con la base de datos, usando JDBC.
+    \begin{itemize}
+        \item \texttt{ZonesDAO.java} — Clase que ejecuta las operaciones SQL para la tabla de zonas.
+        \item \texttt{TreeSpeciesDAO.java} — Encargada de las consultas y modificaciones sobre la tabla de especies de árboles.
+        \item \texttt{ConservationActivitiesDAO.java} — Implementa las operaciones de persistencia para las actividades de conservación.
+        \item \texttt{ConnectionBdd.java} — Clase utilitaria que gestiona la apertura y cierre de conexiones a la base de datos, garantizando el correcto manejo de recursos y evitando fugas.
+    \end{itemize}
+    \item[\texttt{/com/espe/sistemaregistroforestal/model/} (Package Model)] Este paquete contiene las clases que representan las entidades del negocio, conocidas como modelos o POJOs. Estas clases definen los atributos de cada entidad y métodos de acceso para manipular sus datos. No incluyen lógica de negocio ni acceso a la base de datos.
+    \begin{itemize}
+        \item \texttt{ConservationActivities.java} — Modelo que representa una actividad de conservación forestal.
+        \item \texttt{TreeSpecies.java} — Modelo para las especies de árboles registradas.
+        \item \texttt{Zones.java} — Modelo para las zonas o áreas geográficas de interés.
+        \item \texttt{TipoActividad.java} — Enumeración que define los tipos de actividades disponibles.
+        \item \texttt{TipoBosque.java} — Enumeración que clasifica los tipos de bosques.
+    \end{itemize}
+\end{description}
+
+\section{Flujo General de Operación}
+\subsection{Interacción del usuario con la interfaz (Frontend)}
+El usuario accede a la aplicación mediante las páginas JSP, que conforman la interfaz gráfica:
+\begin{itemize}
+    \item Páginas como \texttt{index.jsp}, \texttt{Zones.jsp}, \texttt{TreeSpecies.jsp} o \texttt{ConservationActivities.jsp} presentan formularios, listados y opciones para gestionar datos forestales.
+    \item Las páginas incluyen componentes comunes para navegación y presentación, como \texttt{menu.jsp} y \texttt{footer.jsp}.
+    \item Validaciones iniciales pueden realizarse en el navegador usando JavaScript para mejorar la experiencia.
+\end{itemize}
+
+\subsection{Recepción de la petición por el Controlador (Controller)}
+Cuando el usuario envía una solicitud (ejemplo: agregar una nueva zona forestal), esta se envía al servlet correspondiente dentro del paquete \texttt{/controller}.
+\begin{itemize}
+    \item El controlador (\texttt{ZonesController.java}, \texttt{TreeSpeciesController.java}, etc.) recibe la petición HTTP, procesa parámetros y realiza validaciones preliminares para asegurar datos correctos.
+    \item Una vez validada, el controlador invoca el servicio correspondiente, pasando la información necesaria para la operación.
+\end{itemize}
+
+\subsection{Ejecución de la lógica de negocio en la capa Servicio (Service)}
+La capa de servicios (\texttt{ZonesService.java}, \texttt{TreeSpeciesService.java}, etc.) recibe la petición desde el controlador.
+\begin{itemize}
+    \item Aquí se ejecutan las reglas de negocio, validaciones complejas y procesos específicos, como validación de formatos, cálculos o decisiones condicionales.
+    \item Luego, el servicio llama a la capa DAO para realizar la persistencia o recuperación de datos desde la base de datos.
+\end{itemize}
+
+\subsection{Persistencia de datos en la base de datos mediante DAO}
+La capa DAO (\texttt{ZonesDAO.java}, \texttt{TreeSpeciesDAO.java}, etc.) contiene el código que interactúa con MySQL a través de JDBC.
+\begin{itemize}
+    \item Utiliza la clase \texttt{ConnectionBdd.java} para abrir y cerrar conexiones de forma segura y eficiente.
+    \item Ejecuta sentencias SQL para insertar, actualizar, eliminar o consultar datos.
+    \item Devuelve los resultados o confirma la ejecución exitosa al servicio.
+\end{itemize}
+
+\subsection{Respuesta hacia el usuario}
+La información procesada y resultado de la operación (éxito, error, datos solicitados) se transmite desde DAO hacia la capa servicio y de allí al controlador.
+\begin{itemize}
+    \item El controlador prepara la respuesta para el usuario, estableciendo atributos o redirigiendo a la página JSP adecuada.
+    \item Finalmente, la JSP muestra los resultados o mensajes correspondientes en la interfaz, completando el ciclo de la petición.
+\end{itemize}
+
+\section{Recomendaciones para el Desarrollo}
+\begin{itemize}
+    \item \textbf{Separación de responsabilidades:} Evitar mezclar código de presentación (JSP) con lógica de negocio o acceso a datos. Esto se consigue respetando el patrón MVC (Modelo-Vista-Controlador).
+    \item \textbf{Patrón MVC:} Mantener el flujo de datos y control bien definido para facilitar futuras modificaciones y la incorporación de nuevas funcionalidades.
+    \item \textbf{Gestión de conexiones:} Utilizar la clase \texttt{ConnectionBdd.java} para abrir y cerrar conexiones a la base de datos correctamente, evitando fugas que puedan afectar el rendimiento o causar errores.
+    \item \textbf{Documentación:} Comentar adecuadamente las funciones y métodos más importantes para facilitar la comprensión de otros desarrolladores y la extensión del sistema.
+\end{itemize}
+
+\section{Buenas prácticas utilizadas}
+\begin{itemize}
+    \item \textbf{Nomenclatura consistente:} En Java se recomienda usar camelCase para variables y métodos (ej. \texttt{nombreActividad}, \texttt{obtenerPorId}), y PascalCase para nombres de clases y enums (ej. \texttt{ConservationActivitiesController}, \texttt{TipoActividad}). Esto mejora la legibilidad y mantiene coherencia con las convenciones oficiales.
+    \item \textbf{Separación clara entre capas:} El controlador debe limitarse a recibir las peticiones, invocar la lógica de negocio en los servicios y gestionar las respuestas. Evita incluir lógica de negocio o manipulación directa de datos en el controlador o en las vistas.
+    \item \textbf{Validaciones robustas:} Siempre validar parámetros recibidos, especialmente cuando se convierten a tipos numéricos o fechas, para evitar excepciones inesperadas. Implementa validaciones tanto en frontend como en backend.
+    \item \textbf{Documentación clara:} Añade comentarios breves y precisos en métodos, indicando qué hace cada bloque de código, especialmente en el controlador y en la capa de servicio.
+    \item \textbf{Evitar repetición de código:} Si ciertas operaciones se repiten (como la obtención de parámetros o la validación), considera abstraerlas en métodos auxiliares privados para mejorar la mantenibilidad.
+\end{itemize}
+
+\section{Extensiones Futuras Sugeridas}
+\begin{itemize}
+    \item \textbf{Gestión de usuarios y roles:} Implementar un módulo de autenticación y autorización para controlar el acceso según perfiles de usuario.
+    \item \textbf{Sistema de reportes avanzados:} Generar informes con gráficos, filtros y exportación a formatos como PDF o Excel.
+    \item \textbf{Alertas y notificaciones automáticas:} Incorporar notificaciones por email o mensajes internos ante eventos relevantes del sistema, como registros críticos o alertas de conservación.
+\end{itemize}

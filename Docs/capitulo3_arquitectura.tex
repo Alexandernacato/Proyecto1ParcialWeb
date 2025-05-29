@@ -1,0 +1,96 @@
+\chapter{Documentación de Arquitectura del Sistema}
+\label{cap:arquitectura}
+
+\section{Introducción}
+El presente documento tiene como objetivo describir la arquitectura del sistema "SistemaRegistroForestal". Este sistema está diseñado para registrar, consultar y actualizar información sobre zonas forestales.
+La elección de una arquitectura de N-Capas (o multicapa) busca proporcionar una estructura robusta, modular, escalable y mantenible, permitiendo una clara separación de responsabilidades entre los diferentes componentes del sistema. Esta arquitectura facilita el desarrollo colaborativo, la reutilización de código y la adaptación a futuros cambios en los requisitos del negocio.
+
+\section{Visión General de la Arquitectura y Componentes del Sistema}
+La comunicación entre capas sigue un flujo jerárquico y unidireccional, comenzando desde la capa de presentación hasta llegar a la base de datos, promoviendo el bajo acoplamiento y la alta cohesión entre componentes.
+
+\textbf{Principios Arquitectónicos Aplicados:}
+\begin{itemize}
+    \item \textbf{Separación de Responsabilidades:} Cada capa se enfoca en un conjunto específico de tareas, lo cual simplifica el desarrollo y mejora la comprensión del sistema.
+    \item \textbf{Reusabilidad:} Los componentes de capas inferiores pueden ser reutilizados por múltiples controladores o servicios, e incluso por otros sistemas.
+    \item \textbf{Mantenibilidad:} Al estar las responsabilidades aisladas, los cambios en una capa no afectan significativamente a las demás, lo que reduce riesgos y tiempos de mantenimiento.
+    \item \textbf{Escalabilidad:} La arquitectura permite escalar horizontal o verticalmente componentes específicos (como servicios o acceso a datos) sin modificar el resto del sistema.
+    \item \textbf{Flexibilidad:} Es posible incorporar nuevas tecnologías en capas individuales (como migrar a frameworks modernos en la presentación o utilizar un ORM en datos) sin afectar drásticamente el sistema completo.
+\end{itemize}
+
+\textbf{Capas Identificadas en el Sistema:}
+\begin{description}
+    \item[Capa de Presentación (Presentation Layer):] Proporciona la interfaz de usuario y es la encargada de capturar las entradas del usuario y presentar resultados. Implementada mediante páginas JSP y HTML estático, con apoyo de CSS y JavaScript.
+    \begin{itemize}
+        \item \textbf{Ubicación en el proyecto:} Carpeta \texttt{Web Pages/} (archivos \texttt{.jsp} y \texttt{.html})
+        \item \textbf{Función:} Interfaz con la que el usuario interactúa directamente. Se encarga de mostrar datos y capturar entradas.
+        \item \textbf{Tecnologías:} JSP, HTML, CSS, JavaScript (muy poco MODAL)
+        \item \texttt{index.jsp}: Página de inicio del sistema.
+        \item \texttt{TreeSpecies.jsp}, \texttt{TreeSpeciesFrm.jsp}: Interfaces para visualizar y registrar especies de árboles.
+        \item \texttt{Zones.jsp}, \texttt{ZonesFrm.jsp}: Interfaces para visualizar y registrar zonas geográficas.
+        \item \texttt{footer.jsp}, \texttt{menu.jsp}, \texttt{index.html}: Componentes reutilizables de la interfaz como el menú y pie de página.
+    \end{itemize}
+    \item[Capa de Control (Controller Layer):] Actúa como intermediario entre la interfaz de usuario y la lógica de negocio. Procesa solicitudes, válida entradas y dirige el flujo hacia los servicios correspondientes.
+    \begin{itemize}
+        \item \textbf{Ubicación en el proyecto:} \texttt{com.espe.sistemaregistroforestal.controller} (Package Controller)
+        \item \textbf{Función:} Recibe las peticiones de la capa de presentación, gestiona la entrada del usuario y coordina la lógica de negocio.
+        \item \textbf{Tecnologías:} Java (clases controladoras, tipo servlet o clases simples), arquitectura estilo MVC.
+        \item \texttt{ConservationActivitiesController.java}: Gestiona solicitudes para actividades de conservación.
+        \item \texttt{TreeSpeciesController.java}: Gestiona solicitudes para especies de árboles.
+        \item \texttt{ZonesController.java}: Gestiona solicitudes para zonas geográficas.
+    \end{itemize}
+    \item[Capa de Lógica de Negocio (Business Logic Layer / Service Layer):] Contiene la lógica central de la aplicación, implementa reglas de negocio, válida procesos y orquesta la interacción entre controladores y acceso a datos.
+    \begin{itemize}
+        \item \textbf{Ubicación en el proyecto:} \texttt{com.espe.sistemaregistroforestal.service} (Package Service)
+        \item \textbf{Función:} Contiene la lógica principal del sistema, como reglas de validación, procesos de negocio y coordinación de acceso a datos.
+        \item \textbf{Tecnologías:} Java
+        \item \texttt{ConservationActivitiesService.java}: Implementa la lógica relacionada con actividades de conservación.
+        \item \texttt{TreeSpeciesService.java}: Contiene la lógica de gestión de especies de árboles.
+        \item \texttt{ZonesService.java}: Procesa la lógica relacionada con zonas.
+    \end{itemize}
+    \item[Capa de Acceso a Datos (Data Access Layer / DAO):] Gestiona la persistencia de la información en la base de datos mediante operaciones CRUD. Aísla la lógica de datos del resto del sistema utilizando clases DAO y JDBC.
+    \begin{itemize}
+        \item \textbf{Ubicación en el proyecto:} \texttt{com.espe.sistemaregistroforestal.dao} (Package dao)
+        \item \textbf{Función:} Interactúa directamente con la base de datos mediante operaciones CRUD.
+        \item \textbf{Tecnologías:} Java + MySQL
+        \item \texttt{ConnectionBdd.java}: Gestiona la conexión con la base de datos.
+        \item \texttt{ConservationActivitiesDAO.java}: Acceso a los datos de actividades de conservación.
+        \item \texttt{TreeSpeciesDAO.java}: Acceso a los datos de especies de árboles.
+        \item \texttt{ZonesDAO.java}: Acceso a los datos de zonas.
+    \end{itemize}
+    \item[Capa de Dominio / Entidades (Domain / Entities Layer):] Define las estructuras de datos utilizadas a lo largo del sistema. Son objetos de negocio que representan entidades como zonas, especies o actividades, utilizados como medio de transferencia de información entre capas.
+    \begin{itemize}
+        \item \textbf{Ubicación en el proyecto:} \texttt{com.espe.sistemaregistroforestal.model} (Package Model)
+        \item \textbf{Función:} Define las clases que representan las entidades del negocio. Solo contiene atributos y métodos de acceso (getters y setters).
+        \item \textbf{Tecnologías:} Java (POJOs)
+        \item \texttt{ConservationActivities.java}: Modelo para actividades de conservación.
+        \item \texttt{TreeSpecies.java}: Modelo para especies de árboles.
+        \item \texttt{Zones.java}: Modelo para zonas geográficas.
+        \item \texttt{TipoActividad.java}, \texttt{TipoBosque.java}: Representan catálogos o tipos relacionados con las actividades o los tipos de bosques.
+    \end{itemize}
+\end{description}
+
+\section{Diagrama de Arquitectura}
+\placeholderfigure{Diagrama de Arquitectura del Sistema}
+
+\section{Estrategia de Implementación}
+\subsection{Desarrollo Modular y por Capas}
+Implementación separada de capas: Cada capa (Presentación, Control, Lógica de Negocio, Acceso a Datos, Dominio) se desarrollará de forma independiente para garantizar una clara separación de responsabilidades, facilitar el mantenimiento y permitir la reutilización de componentes.
+Interfaz bien definida entre capas: Se utilizarán contratos claros (interfaces o APIs) entre capas para permitir cambios internos en una capa sin afectar las demás.
+
+\subsection{Uso de Patrones de Diseño}
+\textbf{MVC (Modelo-Vista-Controlador):}
+\begin{itemize}
+    \item La capa de presentación será la "Vista", encargada de la interacción con el usuario.
+    \item La capa de control actuará como "Controlador" que recibe y valida las solicitudes.
+    \item La capa de dominio y lógica de negocio conforman el "Modelo", encapsulando los datos y reglas de negocio.
+\end{itemize}
+\textbf{DAO (Data Access Object):}
+\begin{itemize}
+    \item La capa de acceso a datos implementará DAOs para abstraer y centralizar toda la interacción con la base de datos, facilitando futuros cambios en la tecnología de persistencia.
+\end{itemize}
+
+\subsection{Gestión de la Conexión a la Base de Datos}
+\textbf{Conexión centralizada:}
+\begin{itemize}
+    \item Se utilizará una clase única (\texttt{ConnectionBdd.java}) para administrar la conexión con la base de datos MySQL, aplicando principios de reutilización y evitando múltiples conexiones dispersas.
+\end{itemize}

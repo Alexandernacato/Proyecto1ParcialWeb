@@ -1,0 +1,126 @@
+\documentclass[11pt,twoside]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[mono=false]{libertine} % new linux font, ignore mono
+\usepackage{luatex85}
+\usepackage[most]{tcolorbox}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage[spanish]{babel}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=apa,language=spanish]{biblatex}
+\addbibresource{bib.bib}
+
+%\renewcommand{\baselinestretch}{1.05}
+\usepackage{amsmath,amsthm,amssymb,mathrsfs,amsfonts,dsfont}
+\usepackage{epsfig,graphicx}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{blkarray}
+\usepackage{slashed}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{lipsum} % provides dummy text for testing
+\usepackage[toc,title,titletoc,header]{appendix}
+\usepackage{multicol} % two-col ToC
+
+\usepackage{bm}
+\usepackage{imakeidx} % before hyperref
+\usepackage{hyperref}
+% Load minitoc after hyperref for proper compatibility
+\usepackage{minitoc}
+\mtcselectlanguage{english} % Ensure language compatibility
+\nomtcrule% Suppress warnings about altered commands
+\mtcsetfeature{minitoc}{open}{\vspace{-0.5\baselineskip}} % Suppress chapter alteration warnings
+\usepackage{bookmark} % Helps with cross-references and bookmarks
+\usepackage{float}
+
+% link colors settings
+\hypersetup{
+    colorlinks=true,
+    citecolor=magenta,
+    linkcolor=blue,
+    filecolor=green,      
+    urlcolor=cyan,
+}
+
+\usepackage[capitalise]{cleveref}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{physics}
+\usepackage[linesnumbered,ruled,vlined,algosection]{algorithm2e}
+\SetCommentSty{textsf}
+\usepackage{epigraph}
+\epigraphwidth=1.0\linewidth%
+\epigraphrule=0pt
+
+% adjust margin
+\usepackage[margin=2.3cm]{geometry}
+\headheight=13.6pt
+
+%%%%%%%%%%%%%%%% thmtools %%%%%%%%%%%%%%%%%%%%%
+\usepackage{thmtools}
+
+% Simple placeholder for figures
+\newcommand{\placeholderfigure}[1]{%
+  \begin{center}
+    \fbox{\begin{minipage}{0.8\textwidth}
+      \centering
+      \vspace{1cm}
+      \textbf{#1}
+      \vspace{1cm}
+    \end{minipage}}
+  \end{center}
+}
+
+% Document metadata for PDF
+\hypersetup{
+  pdfauthor={Antonio Adrián Revilla Anchapaxi, Gabriel Omar Murillo Medina, Alexander Freddy Ñacato Peña, Pablo Esteban Zurita},
+  pdftitle={Documentación Completa del Sistema de Registro Forestal},
+  pdfkeywords={Java EE, MySQL, N-Capas, registro forestal, SRS, Arquitectura, Base de Datos, Manual},
+  pdfsubject={Documentación de Software},
+  pdflang={Spanish}
+}
+
+% Simple title page
+\title{
+  \large UNIVERSIDAD DE LAS FUERZAS ARMADAS ESPE \\
+  \normalsize Matriz -- Sangolquí \\
+  \vspace{1cm}
+  \Large \textbf{TALLER UNIDAD 1} \\
+  \vspace{0.5cm}
+  \LARGE \textbf{Sistema de Registro Forestal} \\
+  \large Documentación Completa
+}
+
+\author{
+  Integrantes:\\
+  Antonio Adrián Revilla Anchapaxi \\
+  Gabriel Omar Murillo Medina \\
+  Alexander Freddy Ñacato Peña \\
+  Pablo Esteban Zurita
+}
+
+\date{Sangolquí, 16 de Mayo del 2025}
+
+\begin{document}
+\maketitle
+
+% Simple table of contents
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+\newpage
+
+% Include individual chapters
+\include{capitulo1_analisis_sistema}
+\include{capitulo2_requisitos_srs}
+\include{capitulo3_arquitectura}
+\include{capitulo4_base_datos}
+\include{capitulo5_pruebas}
+\include{capitulo6_manual_desarrollador}
+
+\end{document}

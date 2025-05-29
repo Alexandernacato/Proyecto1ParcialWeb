@@ -1,0 +1,191 @@
+\chapter{Documentación de Base de Datos}
+\label{cap:basedatos}
+
+\section{Introducción}
+Este documento describe la estructura, diseño y detalles de la base de datos utilizada en el sistema SistemaRegistroForestal. La base de datos almacena la información relacionada con zonas forestales, especies de árboles, actividades de conservación, y otros datos relevantes para la gestión y consulta de información forestal.
+El objetivo principal es garantizar una gestión eficiente, segura y coherente de la información para soportar las funcionalidades del sistema.
+
+\section{Modelo de Datos}
+\subsection{Modelo Entidad-Relación (ER)}
+Se presenta el diagrama ER que representa las entidades principales, sus atributos y las relaciones entre ellas.
+\placeholderfigure{Modelo Entidad-Relación (ER) de la Base de Datos}
+
+\subsection{Descripción de Entidades y Atributos}
+
+\textbf{conservation\_activities:} Contiene información de actividades de conservación.
+\begin{longtable}{|p{0.3\linewidth}|p{0.2\linewidth}|p{0.45\linewidth}|}
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline
+\endfirsthead
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+id & int(11) & Identificador único de la actividad (PK, autoincremental). \\ \hline
+nombre\_actividad & varchar(150) & Nombre descriptivo de la actividad. \\ \hline
+fecha\_actividad & date & Fecha en la que se realizó la actividad. \\ \hline
+responsable & varchar(150) & Nombre del responsable o entidad a cargo. \\ \hline
+tipo\_actividad & enum & Tipo de actividad: Reforestación, Monitoreo, Control, etc. \\ \hline
+descripcion & text & Descripción detallada de la actividad. \\ \hline
+zona\_id & int(11) & Identificador de la zona relacionada (FK). \\ \hline
+activo & boolean & Indica si la actividad está activa (1) o inactiva (0). \\ \hline
+\end{longtable}
+
+\textbf{zones:} Contiene información de zonas forestales protegidas.
+\begin{longtable}{|p{0.3\linewidth}|p{0.2\linewidth}|p{0.45\linewidth}|}
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline
+\endfirsthead
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+id & int(11) & Identificador único de la zona (PK, autoincremental). \\ \hline
+nombre & varchar(100) & Nombre de la zona protegida. \\ \hline
+ubicacion & varchar(200) & Descripción de ubicación o coordenadas geográficas. \\ \hline
+provincia & varchar(100) & Provincia donde se encuentra la zona. \\ \hline
+tipo\_bosque & enum & Tipo de bosque: Seco, Húmedo Tropical, Montano, Manglar, Otro \\ \hline
+area\_ha & decimal(10,2) & Área total de la zona en hectáreas. \\ \hline
+descripcion & text & Descripción adicional de la zona. \\ \hline
+fecha\_registro & date & Fecha en que fue registrado el área. \\ \hline
+\end{longtable}
+
+\textbf{tree\_species:} Contiene información de especies arbóreas con sus características.
+\begin{longtable}{|p{0.3\linewidth}|p{0.2\linewidth}|p{0.45\linewidth}|}
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline 
+\endfirsthead
+\hline \multicolumn{3}{|r|}{{Continuación de la tabla anterior}} \\
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline 
+\endhead
+\hline \multicolumn{3}{|r|}{{Continúa en la siguiente página}} \\ 
+\endfoot
+\hline 
+\endlastfoot
+id & int(11) & Identificador único de la especie (PK, autoincremental). \\ \hline
+nombre\_comun & varchar(100) & Nombre común de la especie. \\ \hline
+nombre\_cientifico & varchar(150) & Nombre científico. \\ \hline
+familia\_botanica & varchar(100) & Familia botánica a la que pertenece. \\ \hline
+estado\_conservacion & enum & Estado de conservación (ej: Vulnerable, En Peligro, etc.). \\ \hline
+uso\_principal & varchar(100) & Uso principal de la especie (madera, medicina, ornamental, etc.) \\ \hline
+altura\_maxima\_m & decimal(5,2) & Altura máxima aproximada en metros. \\ \hline
+zona\_id & int(11) & Identificador de la zona donde se encuentra (FK). \\ \hline
+\end{longtable}
+
+\textbf{conservation\_zona:} Tabla intermedia que relaciona actividades con múltiples zonas (relación muchos a muchos).
+\begin{longtable}{|p{0.3\linewidth}|p{0.2\linewidth}|p{0.45\linewidth}|}
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline 
+\endfirsthead
+\hline \multicolumn{3}{|r|}{{Continuación de la tabla anterior}} \\
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline 
+\endhead
+\hline \multicolumn{3}{|r|}{{Continúa en la siguiente página}} \\ 
+\endfoot
+\hline 
+\endlastfoot
+conservation\_id & int(11) & ID de la actividad (FK). \\ \hline
+zona\_id & int(11) & ID de la zona (FK). \\ \hline
+\end{longtable}
+
+\textbf{zona\_especie:} Tabla intermedia que relaciona zonas con especies (relación muchos a muchos).
+\begin{longtable}{|p{0.3\linewidth}|p{0.2\linewidth}|p{0.45\linewidth}|}
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline \endfirsthead
+\hline \multicolumn{3}{|r|}{{Continuación de la tabla anterior}} \\
+\hline \textbf{Campo} & \textbf{Tipo} & \textbf{Descripción} \\ \hline \endhead
+\hline \multicolumn{3}{|r|}{{Continúa en la siguiente página}} \\ \endfoot
+\hline \endlastfoot
+especie\_id & int(11) & ID de la especie (FK). \\ \hline
+zona\_id & int(11) & ID de la zona (FK). \\ \hline
+\end{longtable}
+
+\textbf{Relaciones:}
+\begin{itemize}
+    \item Una zona puede tener muchas actividades de conservación (1 a muchos).
+    \item Una actividad de conservación puede estar asociada a varias zonas a través de \texttt{conservation\_zona} (muchos a muchos).
+    \item Una zona puede contener muchas especies (muchos a muchos) mediante la tabla \texttt{zona\_especie}.
+    \item Cada especie está asociada a una única zona en la tabla \texttt{tree\_species} pero además está relacionada con zonas en \texttt{zona\_especie} para fines más específicos.
+\end{itemize}
+
+\section{Diseño Físico}
+\subsection{Motor de Base de Datos}
+Para el sistema SistemaRegistroForestal, se eligió el motor de base de datos MySQL por su robustez, amplia adopción, compatibilidad con sistemas web, y soporte para operaciones transaccionales. Además, MySQL permite la definición clara de tipos de datos, relaciones, y restricciones que garantizan la integridad de la información almacenada.
+
+\subsection{Estructura de Tablas}
+\textbf{Tabla: conservation\_activities}
+\begin{verbatim}
+CREATE TABLE conservation_activities (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nombre_actividad VARCHAR(150) NOT NULL,
+    fecha_actividad DATE NOT NULL,
+    responsable VARCHAR(150) NOT NULL,
+    tipo_actividad ENUM('Reforestación', 'Monitoreo', 
+                       'Control', 'Otro') NOT NULL,
+    descripcion TEXT,
+    zona_id INT(11),
+    activo TINYINT(1) DEFAULT 1,
+    FOREIGN KEY (zona_id) REFERENCES zones(id)
+);
+\end{verbatim}
+Descripción: Esta tabla almacena las actividades de conservación forestal realizadas en las diferentes zonas protegidas, incluyendo detalles como tipo, fecha y responsables.
+
+\textbf{Tabla: zones}
+\begin{verbatim}
+CREATE TABLE zones (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    ubicacion VARCHAR(200),
+    provincia VARCHAR(100),
+    tipo_bosque ENUM('Seco', 'Húmedo Tropical', 'Montano', 
+                    'Manglar', 'Otro') NOT NULL,
+    area_ha DECIMAL(10,2),
+    descripcion TEXT,
+    fecha_registro DATE
+);
+\end{verbatim}
+Descripción: Define las zonas o áreas protegidas donde se ejecutan actividades de conservación y habitan especies forestales.
+
+\textbf{Tabla: tree\_species}
+\begin{verbatim}
+CREATE TABLE tree_species (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nombre_comun VARCHAR(100) NOT NULL,
+    nombre_cientifico VARCHAR(150),
+    familia_botanica VARCHAR(100),
+    estado_conservacion ENUM('Vulnerable', 'En Peligro', 
+                             'Extinto', 'Sin Riesgo') NOT NULL,
+    uso_principal VARCHAR(100),
+    altura_maxima_m DECIMAL(5,2),
+    zona_id INT(11),
+    FOREIGN KEY (zona_id) REFERENCES zones(id)
+);
+\end{verbatim}
+Descripción: Contiene información detallada sobre las especies arbóreas que habitan en las zonas protegidas.
+
+\textbf{Tabla: conservation\_zona}
+\begin{verbatim}
+CREATE TABLE conservation_zona (
+    conservation_id INT(11),
+    zona_id INT(11),
+    PRIMARY KEY (conservation_id, zona_id),
+    FOREIGN KEY (conservation_id) 
+        REFERENCES conservation_activities(id),
+    FOREIGN KEY (zona_id) REFERENCES zones(id)
+);
+\end{verbatim}
+Descripción: Tabla intermedia que relaciona actividades de conservación con múltiples zonas, estableciendo una relación de muchos a muchos.
+
+\textbf{Tabla: zona\_especie}
+\begin{verbatim}
+CREATE TABLE zona_especie (
+    zona_id INT(11),
+    especie_id INT(11),
+    PRIMARY KEY (zona_id, especie_id),
+    FOREIGN KEY (zona_id) REFERENCES zones(id),
+    FOREIGN KEY (especie_id) REFERENCES tree_species(id)
+);
+\end{verbatim}
+Descripción: Tabla intermedia que relaciona zonas con especies arbóreas, permitiendo una relación muchos a muchos.
+
+\subsection{Esquema Simplificado de Tablas}
+\placeholderfigure{Esquema Simplificado de Tablas}

@@ -1,0 +1,366 @@
+\chapter{Documentación de Requisitos Funcionales y No Funcionales (SRS)}
+\label{cap:srs}
+
+\section{Introducción (SRS)}
+\label{srs:introduccion}
+
+\subsection{Propósito (SRS)}
+\label{srs:proposito}
+Este documento tiene como objetivo definir los requisitos funcionales y no funcionales del Sistema de Registro Forestal, una aplicación destinada a registrar, consultar y actualizar información relativa a zonas forestales, especies de árboles y actividades de conservación. Será desarrollado en Java EE utilizando MySQL como sistema de gestión de base de datos, implementando una arquitectura N-Capas para asegurar la separación de responsabilidades y una alta mantenibilidad.
+
+El documento está dirigido a los desarrolladores del sistema, stakeholders y usuarios finales del producto.
+
+\subsection{Ámbito del sistema (SRS)}
+\label{srs:ambito}
+El sistema, denominado \textbf{Sistema de Registro Forestal}, permitirá a los usuarios autorizados:
+\begin{itemize}
+\item Registrar nuevas zonas forestales.
+\item Registrar especies de árboles.
+\item Registrar y consultar actividades de conservación.
+\item Consultar y actualizar la información almacenada.
+\end{itemize}
+Este sistema está destinado a ser utilizado por entidades gubernamentales, ONGs, y organizaciones encargadas de la gestión ambiental y forestal.
+
+Los principales beneficios que aportará el sistema son:
+\begin{itemize}
+\item Centralización de la información forestal
+\item Facilidad de acceso y consulta de datos
+\item Seguimiento de actividades de conservación
+\item Mejora en la toma de decisiones relacionadas con la gestión forestal
+\end{itemize}
+
+\subsection{Definiciones, Acrónimos y Abreviaturas (SRS)}
+\label{srs:definiciones}
+\begin{itemize}
+\item \textbf{Java EE:} Java Platform, Enterprise Edition.
+\item \textbf{MySQL:} Sistema de gestión de bases de datos relacional.
+\item \textbf{N-Capas:} Arquitectura de software que divide la aplicación en capas lógicas (presentación, lógica de negocio, acceso a datos).
+\item \textbf{SRS:} Software Requirements Specification (Especificación de Requisitos del Software).
+\item \textbf{GUI:} Interfaz gráfica de usuario.
+\item \textbf{HTTPS:} Protocolo seguro de transferencia de hipertexto.
+\item \textbf{MVC:} Modelo-Vista-Controlador, patrón de arquitectura de software.
+\item \textbf{DAO:} Data Access Object, patrón de diseño para acceso a datos.
+\end{itemize}
+
+\subsection{Referencias (SRS)}
+\label{srs:referencias}
+\begin{itemize}
+\item IEEE Std 830-1998: Especificaciones de los requisitos del software.
+\item Java EE 8 API Documentation.
+\item MySQL 8.0 Reference Manual.
+\item Documentación de patrones de diseño MVC y DAO.
+\end{itemize}
+
+\subsection{Visión general del documento (SRS)}
+\label{srs:vision}
+El resto de este documento está organizado de la siguiente manera:
+\begin{itemize}
+\item \textbf{Sección 2 - Descripción general:} Proporciona una perspectiva general del sistema, sus funciones principales, características de los usuarios y restricciones.
+\item \textbf{Sección 3 - Requisitos específicos:} Detalla los requisitos funcionales y no funcionales del sistema, las interfaces externas y los atributos de calidad.
+\item \textbf{Sección 4 - Apéndices:} Contiene información complementaria relevante para la especificación.
+\end{itemize}
+
+\section{Descripción general del Sistema (SRS)}
+\label{srs:descripcion}
+
+\subsection{Perspectiva del producto (SRS)}
+\label{srs:perspectiva}
+El Sistema de Registro Forestal es una aplicación web distribuida basada en Java EE. Utiliza una arquitectura N-Capas que incluye:
+\begin{itemize}
+\item Capa de presentación (JSF/Servlets).
+\item Capa de lógica de negocio (EJBs).
+\item Capa de acceso a datos (JPA o JDBC).
+\item Base de datos MySQL.
+\end{itemize}
+El sistema funcionará de manera independiente, aunque podrá interactuar con sistemas externos a través de interfaces para el intercambio de información geográfica o biológica si fuera necesario en el futuro.
+
+\begin{figure}[h]
+\centering
+\fbox{\begin{tabular}{|c|}
+\hline
+\textbf{Interfaz de Usuario (Navegador Web)} \\
+\hline
+$\downarrow$ $\uparrow$ \\
+\hline
+\textbf{Capa de Presentación (JSF/Servlets)} \\
+\hline
+$\downarrow$ $\uparrow$ \\
+\hline
+\textbf{Capa de Lógica de Negocio (EJBs)} \\
+\hline
+$\downarrow$ $\uparrow$ \\
+\hline
+\textbf{Capa de Acceso a Datos (JPA/JDBC)} \\
+\hline
+$\downarrow$ $\uparrow$ \\
+\hline
+\textbf{Base de Datos MySQL} \\
+\hline
+\end{tabular}}
+\caption{Arquitectura N-Capas del Sistema de Registro Forestal (SRS)}
+\label{fig:srs_arquitectura}
+\end{figure}
+
+\subsection{Funciones del producto (SRS)}
+\label{srs:funciones}
+El Sistema de Registro Forestal proporcionará las siguientes funcionalidades principales:
+\begin{itemize}
+\item \textbf{Registro y gestión de zonas forestales:} Creación, consulta, actualización y eliminación de registros de zonas forestales con sus características geográficas y ecológicas.
+\item \textbf{Gestión de especies arbóreas:} Registro y mantenimiento del catálogo de especies, asociándolas a las zonas donde se encuentran.
+\item \textbf{Registro de actividades de conservación:} Documentación de intervenciones, monitoreos y acciones realizadas en cada zona forestal.
+\item \textbf{Sistema de búsqueda avanzada:} Filtros por diferentes criterios (geográficos, biológicos, temporales).
+\item \textbf{Generación de reportes:} Exportación de datos en formatos PDF y Excel.
+\end{itemize}
+
+\subsection{Características de los usuarios (SRS)}
+\label{srs:usuarios}
+El sistema contempla dos tipos principales de usuarios:
+\begin{itemize}
+\item \textbf{Técnico:} Profesionales del área forestal y ambiental encargados de registrar y actualizar la información. Tienen permisos para crear y modificar registros. Requieren capacitación en las funcionalidades operativas.
+\item \textbf{Consultor:} Usuarios para consultar información. Pueden ser investigadores, personal de campo o público interesado. Requieren capacitación mínima sobre las funciones de consulta.
+\end{itemize}
+
+\subsection{Restricciones (SRS)}
+\label{srs:restricciones}
+Las siguientes restricciones afectan el desarrollo del sistema:
+\begin{itemize}
+\item \textbf{Tecnológicas:}
+  \begin{itemize}
+  \item El sistema debe ejecutarse en un servidor compatible con Java EE (GlassFish, WildFly).
+  \item La base de datos debe ser MySQL 8.0 o superior.
+  \item Debe ser accesible a través de los navegadores web modernos (Chrome, Firefox, Edge).
+  \end{itemize}
+\item \textbf{Operativas:}
+  \begin{itemize}
+  \item La interfaz debe estar en español.
+  \item El sistema debe poder operar en redes con ancho de banda limitado.
+  \end{itemize}
+\item \textbf{Seguridad:}
+  \begin{itemize}
+  \item Debe cumplir con estándares de protección de datos personales.
+  \item Las comunicaciones deben ser cifradas mediante HTTPS.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Suposiciones y dependencias (SRS)}
+\label{srs:suposiciones}
+\begin{itemize}
+\item \textbf{Suposiciones:}
+  \begin{itemize}
+  \item Los usuarios dispondrán de acceso a internet.
+  \item Los usuarios tendrán conocimientos básicos de informática.
+  \item La información geográfica estará disponible en formatos estándar.
+  \end{itemize}
+\item \textbf{Dependencias:}
+  \begin{itemize}
+  \item Disponibilidad de un servidor con Java EE configurado correctamente.
+  \item Disponibilidad de un servidor MySQL accesible desde el servidor de aplicaciones.
+  \item Conexión a internet estable para el acceso remoto.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Requisitos futuros (SRS)}
+\label{srs:futuros}
+Los siguientes requisitos podrían considerarse para futuras versiones del sistema:
+\begin{itemize}
+\item Integración con sistemas de información geográfica (GIS).
+\item Aplicación móvil para trabajo de campo.
+\item Módulo de análisis estadístico y visualización de datos.
+\item Funcionalidades de inteligencia artificial para identificación de especies.
+\item Ampliación para incluir fauna asociada a cada zona forestal.
+\end{itemize}
+
+\section{Requisitos específicos (SRS)}
+\label{srs:requisitos}
+
+\subsection{Interfaces externas (SRS)}
+\label{srs:interfaces}
+
+\subsubsection{Interfaz de usuario (SRS)}
+\begin{itemize}
+\item El sistema proporcionará una interfaz web responsiva, compatible con resoluciones de pantalla de 1024x768 píxeles y superiores.
+\item La interfaz seguirá principios de diseño adaptativo para funcionar correctamente en diferentes dispositivos.
+\item Se utilizarán componentes estándar de HTML5, CSS3 y JavaScript.
+\item Los formularios mostrarán validaciones instantáneas y mensajes de error claros.
+\end{itemize}
+
+\subsubsection{Interfaz de hardware (SRS)}
+\begin{itemize}
+\item El sistema no requiere hardware especializado para su funcionamiento básico.
+\item Para funcionalidades de campo, se podría requerir integración con GPS para la versión móvil futura.
+\end{itemize}
+
+\subsubsection{Interfaz de software (SRS)}
+\begin{itemize}
+\item El sistema debe ser compatible con los navegadores web: Chrome (v80+), Firefox (v75+), Edge (v80+).
+\item El servidor requiere Java EE 8 o superior y un servidor de aplicaciones compatible.
+\item La base de datos requiere MySQL 8.0 o superior.
+\end{itemize}
+
+\subsubsection{Interfaz de comunicaciones (SRS)}
+\begin{itemize}
+\item Se utilizará el protocolo HTTP/HTTPS para todas las comunicaciones.
+\item Las transferencias de datos utilizarán formato JSON para el intercambio de información.
+\item Se implementará un mecanismo de manejo de sesiones para mantener la autenticación de los usuarios.
+\end{itemize}
+
+\subsection{Funciones (SRS)}
+\label{srs:ReqFuncionales}
+
+\subsubsection{RF01 – Registro de zonas forestales (SRS)}
+\begin{itemize}
+\item El sistema debe permitir registrar zonas indicando: nombre, región, coordenadas geográficas, superficie, tipo de bosque, y estado de conservación.
+\item Se debe poder adjuntar archivos (imágenes, documentos) a cada registro de zona.
+\item El registro debe incluir campos para metadatos adicionales (altitud, temperatura promedio, precipitación).
+\end{itemize}
+
+\subsubsection{RF02 – Consulta de zonas forestales (SRS)}
+\begin{itemize}
+\item El usuario podrá consultar zonas mediante filtros: nombre, región, tipo de bosque o estado.
+\item Los resultados deben poder ordenarse por diferentes criterios.
+\item Debe existir una vista de mapa y una vista de lista.
+\item El sistema debe permitir ver el detalle completo de cada zona.
+\end{itemize}
+
+\subsubsection{RF03 – Actualización de zonas forestales (SRS)}
+\begin{itemize}
+\item El sistema debe permitir modificar los datos de zonas previamente registradas.
+\item Los usuarios técnicos pueden realizar actualizaciones.
+\end{itemize}
+
+\subsubsection{RF04 – Gestión de especies arbóreas (SRS)}
+\begin{itemize}
+\item Se deben registrar especies indicando: nombre común, nombre científico, familia, altura promedio, diámetro promedio, y usos conocidos.
+\item Las especies se asociarán a una o más zonas.
+\item Debe permitirse adjuntar imágenes de cada especie.
+\item El sistema debe facilitar la búsqueda de especies por criterios taxonómicos.
+\end{itemize}
+
+\subsubsection{RF05 – Registro y consulta de actividades de conservación (SRS)}
+\begin{itemize}
+\item El usuario podrá registrar actividades indicando: nombre, tipo (reforestación, monitoreo, control de plagas, etc.), fecha, responsables, y zona forestal.
+\item Se podrá consultar por fecha, tipo y zona.
+\item Las actividades deben poder relacionarse con las especies afectadas.
+\item Debe existir un sistema de seguimiento del estado de cada actividad.
+\end{itemize}
+
+\subsubsection{RF06 – Reportes exportables (SRS)}
+\begin{itemize}
+\item El sistema debe permitir generar reportes en formato PDF y Excel de las zonas, especies y actividades registradas.
+\item Los reportes deben ser configurables, permitiendo seleccionar qué campos incluir.
+\item Se deben poder generar reportes estadísticos básicos (número de especies por zona, actividades por periodo, etc.)
+\end{itemize}
+
+\subsection{Requisitos de rendimiento (SRS)}
+\label{srs:rendimiento}
+\begin{itemize}
+\item \textbf{RNF01 - Rendimiento:}
+  \begin{itemize}
+  \item Las respuestas a las consultas no deben superar los 3 segundos con hasta 1000 registros visibles.
+  \item El sistema debe soportar al menos 50 usuarios concurrentes sin degradación notable del servicio.
+  \item La carga inicial de la aplicación no debe superar los 5 segundos en una conexión estándar.
+  \end{itemize}
+\item \textbf{Carga de datos:}
+  \begin{itemize}
+  \item El sistema debe ser capaz de almacenar información sobre al menos 10,000 zonas forestales.
+  \item Debe poder manejar un catálogo de 5,000 especies arbóreas.
+  \item La base de datos debe optimizarse para manejar eficientemente consultas complejas con múltiples criterios de filtrado.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Restricciones de diseño (SRS)}
+\label{srs:restriccionesDiseño}
+\begin{itemize}
+\item El desarrollo debe seguir el patrón de arquitectura MVC.
+\item Se debe implementar el patrón DAO para el acceso a datos.
+\item El sistema debe utilizar un sistema de inyección de dependencias.
+\item La capa de presentación debe estar claramente separada de la lógica de negocio.
+\item Se debe utilizar JPA como tecnología de persistencia.
+\item El diseño de la base de datos debe seguir al menos la tercera forma normal.
+\end{itemize}
+
+\subsection{Atributos del sistema (SRS)}
+\label{srs:atributos}
+
+\subsubsection{Seguridad (SRS)}
+\begin{itemize}
+\item \textbf{RNF02 - Seguridad:}
+  \begin{itemize}
+  \item Las comunicaciones deben ser cifradas mediante HTTPS.
+  \item Deben implementarse mecanismos contra ataques de inyección SQL y XSS.
+  \item Se deben aplicar principios de desarrollo seguro para proteger la integridad de los datos.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Usabilidad (SRS)}
+\begin{itemize}
+\item \textbf{RNF03 - Usabilidad:}
+  \begin{itemize}
+  \item La interfaz debe ser intuitiva y accesible, con formularios validados y mensajes de error claros.
+  \item Compatible con los navegadores modernos (Chrome, Firefox, Edge).
+  \item El sistema debe ser accesible según las pautas WCAG 2.1 nivel AA.
+  \item Se deben proporcionar ayudas contextuales en los formularios complejos.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Mantenibilidad y Portabilidad (SRS)}
+\begin{itemize}
+\item \textbf{RNF04 - Escalabilidad:}
+  \begin{itemize}
+  \item El sistema debe poder escalar horizontalmente para atender múltiples solicitudes simultáneas.
+  \end{itemize}
+\item \textbf{RNF05 - Mantenibilidad:}
+  \begin{itemize}
+  \item El código debe estar documentado y seguir patrones de diseño MVC y DAO.
+  \item Se debe mantener un conjunto de pruebas unitarias con al menos 70\% de cobertura.
+  \end{itemize}
+\item \textbf{RNF06 - Disponibilidad:}
+  \begin{itemize}
+  \item El sistema debe estar disponible al menos el 95\% del tiempo durante el horario laboral.
+  \end{itemize}
+\item \textbf{RNF07 - Compatibilidad:}
+  \begin{itemize}
+  \item Compatible con sistemas operativos Windows, Linux y MacOS en su cliente (navegador).
+  \end{itemize}
+\item \textbf{RNF08 - Internacionalización:}
+  \begin{itemize}
+  \item Aunque inicialmente se usará en español, debe prepararse para futuras traducciones.
+  \end{itemize}
+\item \textbf{RNF09 - Respaldo de datos:}
+  \begin{itemize}
+  \item Debe realizarse respaldo automático de la base de datos cada 24 horas.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Otros requisitos (SRS)}
+\label{srs:otros}
+\begin{itemize}
+\item \textbf{Cumplimiento legal:} El sistema debe cumplir con las regulaciones locales de protección de datos.
+\item \textbf{Documentación:} Debe incluirse un manual de usuario completo y documentación técnica.
+\item \textbf{Capacitación:} Se debe proporcionar un plan de capacitación para los diferentes tipos de usuarios.
+\end{itemize}
+
+\section{Apéndices (SRS)}
+\label{srs:apendices}
+
+\subsection{Apéndice A: Diagrama de entidades (SRS)}
+Se incluirá un diagrama entidad-relación con las principales entidades:
+\begin{itemize}
+\item Zona Forestal
+\item Especie Arbórea
+\item Actividad de Conservación
+\end{itemize}
+\placeholderfigure{Apéndice A: Diagrama de entidades (SRS)}
+
+\subsection{Apéndice B: Mockups de interfaz (SRS)}
+Se incluirán diseños preliminares de las principales interfaces:
+\begin{itemize}
+\item Panel de control
+\item Formulario de registro de zona forestal
+\item Vista de consulta de especies
+\item Formulario de actividades de conservación
+\end{itemize}
+\placeholderfigure{Apéndice B: Mockups de interfaz (SRS)}
+
+\subsection{Apéndice C: Glosario de términos forestales (SRS)}
+Se incluirá un glosario con terminología específica del ámbito forestal relevante para la comprensión del sistema.

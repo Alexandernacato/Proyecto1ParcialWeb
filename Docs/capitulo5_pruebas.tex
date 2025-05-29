@@ -1,0 +1,60 @@
+\chapter{Documentación de Pruebas}
+\label{cap:pruebas}
+
+\section{Introducción}
+Sistema: SistemaRegistroForestal \\
+Motor de BD: MySQL \\
+Objetivo: Validar que las operaciones CRUD y las relaciones entre tablas funcionen correctamente a nivel de base de datos.
+
+\section{Casos de Prueba}
+
+\begin{longtable}{|p{0.1\linewidth}|p{0.25\linewidth}|p{0.4\linewidth}|p{0.2\linewidth}|}
+\hline \textbf{ID Caso} & \textbf{Descripción} & \textbf{Datos de Entrada / Pasos} & \textbf{Resultado Esperado} \\ \hline \endfirsthead
+\hline \multicolumn{4}{|r|}{{Continuación de la tabla anterior}} \\
+\hline \textbf{ID Caso} & \textbf{Descripción} & \textbf{Datos de Entrada / Pasos} & \textbf{Resultado Esperado} \\ \hline \endhead
+\hline \multicolumn{4}{|r|}{{Continúa en la siguiente página}} \\ \endfoot
+\hline \endlastfoot
+TCA-01 & Insertar actividad válida en tabla \texttt{conservation\_activities} & \texttt{nombre\_actividad = 'Control Incendios', fecha\_actividad = '2025-04-15', tipo\_actividad = 'Control'} & Registro exitoso \\ \hline
+TCA-02 & Insertar actividad sin nombre (campo obligatorio) & \texttt{fecha\_actividad = '2025-04-15', tipo\_actividad = 'Control'} & Error: \texttt{nombre\_actividad} es obligatorio \\ \hline
+TCA-03 & Insertar actividad con \texttt{tipo\_actividad} inválido & \texttt{tipo\_actividad = 'Exploración'} & Error: valor no permitido en ENUM \\ \hline
+TZ-01 & Insertar zona válida en tabla \texttt{zones} & \texttt{nombre = 'Reserva Norte', tipo\_bosque = 'Seco', area\_ha = 150.50} & Zona registrada correctamente \\ \hline
+TZ-02 & Insertar zona sin \texttt{tipo\_bosque} & \texttt{nombre = 'Reserva Norte', area\_ha = 150.50} & Error: \texttt{tipo\_bosque} es obligatorio \\ \hline
+TZ-03 & Insertar zona con \texttt{tipo\_bosque} inválido & \texttt{tipo\_bosque = 'Nevado'} & Error: valor no permitido en ENUM \\ \hline
+TT-01 & Insertar especie válida en tabla \texttt{tree\_species} & \texttt{nombre\_comun = 'Guayacán', estado\_conservacion = 'Vulnerable'} & Especie registrada \\ \hline
+TT-02 & Insertar especie sin nombre común & \texttt{estado\_conservacion = 'Vulnerable'} & Error: \texttt{nombre\_comun} es obligatorio \\ \hline
+TT-03 & Insertar especie con \texttt{estado\_conservacion} inválido & \texttt{estado\_conservacion = 'Crítico'} & Error: valor no permitido en ENUM \\ \hline
+\end{longtable}
+
+\section{Casos de Prueba para Validación de Funcionalidades}
+
+\subsection{Pruebas de Inserción}
+\begin{itemize}
+\item \textbf{TCA-01:} Verificar que se puede insertar correctamente una actividad de conservación con todos los campos válidos.
+\item \textbf{TZ-01:} Confirmar que una zona forestal puede ser registrada con información completa y tipos de bosque válidos.
+\item \textbf{TT-01:} Validar el registro de especies arbóreas con datos botánicos correctos.
+\end{itemize}
+
+\subsection{Pruebas de Validación de Restricciones}
+\begin{itemize}
+\item \textbf{TCA-02, TT-02:} Verificar que los campos obligatorios son requeridos para el registro exitoso.
+\item \textbf{TCA-03, TZ-03, TT-03:} Confirmar que los valores ENUM solo aceptan opciones predefinidas.
+\end{itemize}
+
+\subsection{Pruebas de Relaciones entre Tablas}
+\begin{itemize}
+\item Verificar que las claves foráneas mantienen la integridad referencial.
+\item Confirmar que las relaciones muchos a muchos funcionan correctamente a través de tablas intermedias.
+\item Validar que las eliminaciones en cascada o restricciones funcionan según el diseño.
+\end{itemize}
+
+\section{Resultados de Pruebas}
+Las pruebas ejecutadas han demostrado que:
+\begin{itemize}
+\item Las operaciones CRUD básicas funcionan correctamente.
+\item Las validaciones de campos obligatorios y tipos ENUM operan según lo esperado.
+\item La integridad referencial se mantiene entre las tablas relacionadas.
+\item Las consultas complejas que involucran múltiples tablas se ejecutan eficientemente.
+\end{itemize}
+
+\section{Conclusiones}
+El sistema de base de datos cumple con los requisitos funcionales establecidos y mantiene la integridad de los datos a través de las restricciones implementadas. Las pruebas confirman que la estructura diseñada soporta adecuadamente las operaciones del Sistema de Registro Forestal.
