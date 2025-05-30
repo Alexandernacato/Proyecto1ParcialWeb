@@ -6,7 +6,10 @@ Dialogos modales para operaciones CRUD de especies
 import customtkinter as ctk
 from tkinter import messagebox
 from typing import Optional, Callable, List
-from ..core.models import TreeSpecies, Zone, ConservationState
+try:
+    from core.models import TreeSpecies, Zone, ConservationState
+except ImportError:
+    from ..core.models import TreeSpecies, Zone, ConservationState
 
 
 class SpeciesCreateDialog:

@@ -94,11 +94,15 @@ class SidebarComponent:
         self.callbacks = {}
         self.setup_sidebar()
     
+    def grid(self, **kwargs):
+        """Delegate grid method to the internal sidebar_frame"""
+        return self.sidebar_frame.grid(**kwargs)
+    
     def setup_sidebar(self):
         """Crear sidebar moderno con controles organizados"""
         # Sidebar frame
         self.sidebar_frame = ctk.CTkFrame(self.parent, width=self.width, corner_radius=0)
-        self.sidebar_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 2), pady=0)
+        # Don't call grid here since it will be called externally
         self.sidebar_frame.grid_propagate(False)
         
         # Scroll frame para el sidebar
@@ -245,16 +249,21 @@ class SidebarComponent:
 class TabbedContentArea:
     """Área de contenido con pestañas"""
     
-    def __init__(self, parent):
+    def __init__(self, parent, callbacks: dict = None):
         self.parent = parent
+        self.callbacks = callbacks or {}
         self.log_callbacks: List[Callable[[str], None]] = []
         self.setup_content_area()
+    
+    def grid(self, **kwargs):
+        """Delegate grid method to the internal content_frame"""
+        return self.content_frame.grid(**kwargs)
     
     def setup_content_area(self):
         """Crear área de contenido principal"""
         # Content frame
         self.content_frame = ctk.CTkFrame(self.parent, corner_radius=0)
-        self.content_frame.grid(row=0, column=1, sticky="nsew", padx=(2, 0), pady=0)
+        # Don't call grid here since it will be called externally
         
         # Crear tabview
         self.tabview = ctk.CTkTabview(
@@ -438,6 +447,36 @@ class TabbedContentArea:
         if hasattr(self, 'search_entry') and self.search_entry:
             return self.search_entry.get()
         return ""
+    
+    def update_species_list(self, species_list):
+        """Actualizar la lista de especies en la pestaña 'Species List'"""
+        if hasattr(self, 'species_scroll') and self.species_scroll:
+            # Limpiar contenido anterior
+            for widget in self.species_scroll.winfo_children():
+                widget.destroy()
+            if not species_list:
+                placeholder = ctk.CTkLabel(
+                    self.species_scroll,
+                    text="🔄 No species to display",
+                    font=ctk.CTkFont(size=14),
+                    text_color="gray"
+                )
+                placeholder.pack(pady=50)
+            else:
+                for i, species in enumerate(species_list, 1):
+                    label = ctk.CTkLabel(
+                        self.species_scroll,
+                        text=f"{i}. {species.nombreComun} (ID: {species.id})",
+                        font=ctk.CTkFont(size=13, weight="bold")
+                    )
+                    label.pack(anchor="w", padx=10, pady=2)
+                    details = ctk.CTkLabel(
+                        self.species_scroll,
+                        text=f"🧬 {species.nombreCientifico or 'N/A'} | 🛡️ {getattr(species, 'estadoConservacionNombre', 'Unknown')} | 🌍 {getattr(species, 'zonaNombre', 'Unknown')} | {'✅ Active' if species.activo else '❌ Inactive'}",
+                        font=ctk.CTkFont(size=11),
+                        text_color="gray"
+                    )
+                    details.pack(anchor="w", padx=30, pady=(0, 6))
 
 
 class FooterComponent:

@@ -5,8 +5,12 @@ Gestiona operaciones de datos y filtrado para el sistema forestal
 
 from typing import List, Optional, Callable, Any
 import threading
-from .soap_client import SOAPClientManager
-from .models import TreeSpecies, Zone, ConservationState, SearchFilter
+try:
+    from soap_client import SOAPClientManager
+    from models import TreeSpecies, Zone, ConservationState, SearchFilter
+except ImportError:
+    from .soap_client import SOAPClientManager
+    from .models import TreeSpecies, Zone, ConservationState, SearchFilter
 
 
 class DataManager:
@@ -22,15 +26,84 @@ class DataManager:
     def add_data_callback(self, callback: Callable[[str, Any], None]):
         """Añadir callback para notificaciones de datos"""
         self._data_callbacks.append(callback)
-        
-    def _notify_data_change(self, event_type: str, data: Any = None):
-        """Notificar cambios de datos a los callbacks"""
-        for callback in self._data_callbacks:
-            try:
-                callback(event_type, data)
-            except Exception:
-                pass  # Ignorar errores en callbacks
-                
+    
+    def add_data_change_callback(self, callback: Callable[[str, Any], None]):
+        """Alias para add_data_callback para compatibilidad"""
+        self.add_data_callback(callback)
+    
+    def get_all_zones(self) -> List[Zone]:
+        """Obtener todas las zonas sincronamente"""
+        try:
+            if not self.zones:
+                zones_raw = self.soap_client.get_all_zones()
+                self.zones = [self._convert_to_zone(z) for z in zones_raw]
+            return self.zones
+        except Exception as e:
+            print(f"Error getting zones: {e}")
+            return []
+    
+    def get_all_conservation_states(self) -> List[ConservationState]:
+        """Obtener todos los estados de conservación sincronamente"""
+        try:
+            if not self.conservation_states:
+                states_raw = self.soap_client.get_all_conservation_states()
+                self.conservation_states = [self._convert_to_conservation_state(s) for s in states_raw]
+            return self.conservation_states
+        except Exception as e:
+            print(f"Error getting conservation states: {e}")
+            return []
+    
+    def get_all_species(self) -> List[TreeSpecies]:
+        """Obtener todas las especies sincronamente"""
+        try:
+            species_raw = self.soap_client.get_all_tree_species()
+            self.current_species_list = [self._convert_to_tree_species(s) for s in species_raw]
+            return self.current_species_list
+        except Exception as e:
+            print(f"Error getting species: {e}")
+            return []
+    
+    def get_species_by_id(self, species_id: int) -> Optional[TreeSpecies]:
+        """Obtener especie por ID sincronamente"""
+        try:
+            species_raw = self.soap_client.get_tree_species_by_id(species_id)
+            if species_raw:
+                return self._convert_to_tree_species(species_raw)
+            return None
+        except Exception as e:
+            print(f"Error getting species by ID: {e}")
+            return None
+    
+    def _convert_to_zone(self, zone_raw) -> Zone:
+        """Convertir zona raw a modelo Zone"""
+        return Zone(
+            id=zone_raw.id,
+            nombre=zone_raw.nombre,
+            tipoBosque=getattr(zone_raw, 'tipoBosque', ''),
+            areaHa=getattr(zone_raw, 'areaHa', 0.0)
+        )
+    
+    def _convert_to_conservation_state(self, state_raw) -> ConservationState:
+        """Convertir estado raw a modelo ConservationState"""
+        return ConservationState(
+            id=state_raw.id,
+            nombre=state_raw.nombre,
+            descripcion=getattr(state_raw, 'descripcion', '')
+        )
+    
+    def _convert_to_tree_species(self, species_raw) -> TreeSpecies:
+        """Convertir especie raw a modelo TreeSpecies"""
+        return TreeSpecies(
+            id=species_raw.id,
+            nombreComun=species_raw.nombreComun,
+            nombreCientifico=getattr(species_raw, 'nombreCientifico', ''),
+            estadoConservacionId=species_raw.estadoConservacionId,
+            zonaId=species_raw.zonaId,
+            activo=getattr(species_raw, 'activo', True),
+            estadoConservacionNombre=getattr(species_raw, 'estadoConservacionNombre', ''),
+            zonaNombre=getattr(species_raw, 'zonaNombre', '')
+        )
+
     def load_reference_data(self, callback: Optional[Callable[[bool, str], None]] = None):
         """Cargar datos de referencia (zonas y estados de conservación)"""
         def _load_thread():
