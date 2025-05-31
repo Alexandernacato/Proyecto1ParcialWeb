@@ -121,6 +121,21 @@ class SOAPClientManager:
             self._is_connected = False
             return False
 
+    def _test_connections(self):
+        """Probar las conexiones con consultas simples"""
+        try:
+            # Probar servicio de zonas
+            if self._zones_client:
+                self._zones_client.service.getAllZones()
+            
+            # Probar servicio de especies  
+            if self._species_client:
+                self._species_client.service.getAllTreeSpecies()
+                
+        except Exception as e:
+            logger.warning(f"Connection test warning: {e}")
+            # No lanzar error aquí, solo advertir
+
     def is_connected(self) -> bool:
         """
         Verificar si está conectado a los servicios SOAP
@@ -218,6 +233,111 @@ class SOAPClientManager:
             logger.error(f"Error getting zone {zone_id}: {e}")
             return None
 
+    def create_zone(self, nombre: str, tipoBosque: str, areaHa: float, activo: bool = True) -> bool:
+        """
+        Crear nueva zona
+        
+        Args:
+            nombre: Nombre de la zona
+            tipoBosque: Tipo de bosque
+            areaHa: Área en hectáreas
+            activo: Estado activo de la zona
+        
+        Returns:
+            bool: True si la creación fue exitosa
+        """
+        if not self.is_connected():
+            raise Exception("Not connected to SOAP services")
+        
+        if not self._zones_client:
+            logger.error("Zones service not available for zone creation")
+            return False
+        
+        try:
+            logger.info(f"Creating zone: {nombre}")
+            response = self._zones_client.service.createZone(
+                nombre=nombre,
+                tipoBosque=tipoBosque,
+                areaHa=areaHa,
+                activo=activo
+            )
+            return bool(response)
+            
+        except Fault as e:
+            logger.error(f"SOAP fault creating zone: {e}")
+            return False
+        except Exception as e:
+            logger.error(f"Error creating zone: {e}")
+            return False
+
+    def update_zone(self, zone_id: int, nombre: str, tipoBosque: str, areaHa: float, activo: bool = True) -> bool:
+        """
+        Actualizar zona existente
+        
+        Args:
+            zone_id: ID de la zona a actualizar
+            nombre: Nuevo nombre de la zona
+            tipoBosque: Nuevo tipo de bosque
+            areaHa: Nueva área en hectáreas
+            activo: Estado activo de la zona
+        
+        Returns:
+            bool: True si la actualización fue exitosa
+        """
+        if not self.is_connected():
+            raise Exception("Not connected to SOAP services")
+        
+        if not self._zones_client:
+            logger.error("Zones service not available for zone update")
+            return False
+        
+        try:
+            logger.info(f"Updating zone {zone_id}")
+            response = self._zones_client.service.updateZone(
+                id=zone_id,
+                nombre=nombre,
+                tipoBosque=tipoBosque,
+                areaHa=areaHa,
+                activo=activo
+            )
+            return bool(response)
+            
+        except Fault as e:
+            logger.error(f"SOAP fault updating zone: {e}")
+            return False
+        except Exception as e:
+            logger.error(f"Error updating zone: {e}")
+            return False
+
+    def delete_zone(self, zone_id: int) -> bool:
+        """
+        Eliminar zona (borrado lógico)
+        
+        Args:
+            zone_id: ID de la zona a eliminar
+        
+        Returns:
+            bool: True si la eliminación fue exitosa
+        """
+        if not self.is_connected():
+            raise Exception("Not connected to SOAP services")
+        
+        if not self._zones_client:
+            logger.error("Zones service not available for zone deletion")
+            return False
+        
+        try:
+            logger.info(f"Deleting zone {zone_id}")
+            response = self._zones_client.service.deleteZone(zone_id)
+            return bool(response)
+            
+        except Fault as e:
+            logger.error(f"SOAP fault deleting zone: {e}")
+            return False
+        except Exception as e:
+            logger.error(f"Error deleting zone: {e}")
+            return False
+
     # ==================== MÉTODOS PARA ESPECIES ====================
     
     def get_all_species(self) -> List[TreeSpeciesData]:
@@ -242,7 +362,8 @@ class SOAPClientManager:
                         nombreComun=getattr(species_obj, 'nombreComun', ''),
                         nombreCientifico=getattr(species_obj, 'nombreCientifico', ''),
                         estadoConservacionId=getattr(species_obj, 'estadoConservacionId', 0),
-                        estadoConservacionNombre=getattr(species_obj, 'estadoConservacionNombre', ''),                        zonaId=getattr(species_obj, 'zonaId', 0),
+                        estadoConservacionNombre=getattr(species_obj, 'estadoConservacionNombre', ''),
+                        zonaId=getattr(species_obj, 'zonaId', 0),
                         zonaNombre=getattr(species_obj, 'zonaNombre', ''),
                         activo=getattr(species_obj, 'activo', True)
                     )
@@ -258,16 +379,7 @@ class SOAPClientManager:
             logger.error(f"Error getting species: {e}")
             raise Exception(f"Failed to get species: {e}")
 
-    def get_all_tree_species(self) -> List[TreeSpeciesData]:
-        """
-        Alias para get_all_species() para compatibilidad con DataManager
-        
-        Returns:
-            List[TreeSpeciesData]: Lista de especies disponibles
-        """
-        return self.get_all_species()
-
-    def get_tree_species_by_id(self, species_id: int) -> Optional[TreeSpeciesData]:
+    def get_species_by_id(self, species_id: int) -> Optional[TreeSpeciesData]:
         """
         Obtener especie por ID
         
@@ -305,8 +417,30 @@ class SOAPClientManager:
             logger.error(f"Error getting species {species_id}: {e}")
             return None
 
-    def create_tree_species(self, common_name: str, scientific_name: str, 
-                           conservation_state_id: int, zone_id: int, active: bool = True) -> bool:
+    def search_species_by_name(self, name: str) -> List[TreeSpeciesData]:
+        """
+        Buscar especies por nombre (simulado con filtrado local)
+        
+        Args:
+            name: Nombre a buscar
+        
+        Returns:
+            List[TreeSpeciesData]: Lista de especies que coinciden
+        """
+        try:
+            all_species = self.get_all_species()
+            filtered_species = [
+                species for species in all_species
+                if name.lower() in species.nombreComun.lower() or 
+                   name.lower() in species.nombreCientifico.lower()
+            ]
+            return filtered_species
+        except Exception as e:
+            logger.error(f"Error searching species: {e}")
+            return []
+
+    def create_species(self, common_name: str, scientific_name: str, 
+                      conservation_state_id: int, zone_id: int, active: bool = True) -> bool:
         """
         Crear nueva especie de árbol
         
@@ -341,8 +475,8 @@ class SOAPClientManager:
             logger.error(f"Error creating species: {e}")
             return False
 
-    def update_tree_species(self, species_id: int, common_name: str, scientific_name: str,
-                           conservation_state_id: int, zone_id: int, active: bool = True) -> bool:
+    def update_species(self, species_id: int, common_name: str, scientific_name: str,
+                      conservation_state_id: int, zone_id: int, active: bool = True) -> bool:
         """
         Actualizar especie de árbol existente
         
@@ -379,7 +513,7 @@ class SOAPClientManager:
             logger.error(f"Error updating species: {e}")
             return False
 
-    def delete_tree_species(self, species_id: int) -> bool:
+    def delete_species(self, species_id: int) -> bool:
         """
         Eliminar especie de árbol (borrado lógico)
         
@@ -406,7 +540,7 @@ class SOAPClientManager:
 
     # ==================== MÉTODOS AUXILIARES ====================
     
-    def get_all_conservation_states(self) -> List[ConservationStateData]:
+    def get_conservation_states(self) -> List[ConservationStateData]:
         """
         Obtener todos los estados de conservación
         
