@@ -54,8 +54,7 @@ class SOAPClientManager:
     
     def __init__(self,
                  zones_service_url: str = "http://localhost:8081/SistemaForestalFinal/ZoneCrudService?wsdl",
-                 species_service_url: str = "http://localhost:8282/TreeSpeciesCrudService?wsdl"):
-        """
+                 species_service_url: str = "http://localhost:8282/TreeSpeciesCrudService?wsdl"):        """
         Inicializar el cliente SOAP
         
         Args:
@@ -75,30 +74,47 @@ class SOAPClientManager:
         Establecer conexión con los servicios SOAP
         
         Returns:
-            bool: True si la conexión es exitosa, False en caso contrario
+            bool: True si al menos un servicio está disponible
         """
         try:
             logger.info("Connecting to SOAP services...")
             
-            # Conectar al servicio de zonas
-            logger.info(f"Connecting to zones service: {self.zones_service_url}")
-            self._zones_client = Client(self.zones_service_url)
+            zones_connected = False
+            species_connected = False
             
-            # Conectar al servicio de especies
-            logger.info(f"Connecting to species service: {self.species_service_url}")
-            self._species_client = Client(self.species_service_url)
+            # Intentar conectar al servicio de zonas
+            try:
+                logger.info(f"Connecting to zones service: {self.zones_service_url}")
+                self._zones_client = Client(self.zones_service_url)
+                zones_connected = True
+                logger.info("✅ Zones service connected")
+            except (TransportError, requests.exceptions.ConnectionError) as e:
+                logger.warning(f"⚠️ Zones service not available: {e}")
+                self._zones_client = None
             
-            # Verificar conexiones con una consulta simple
-            self._test_connections()
+            # Intentar conectar al servicio de especies
+            try:
+                logger.info(f"Connecting to species service: {self.species_service_url}")
+                self._species_client = Client(self.species_service_url)
+                species_connected = True
+                logger.info("✅ Species service connected")
+            except (TransportError, requests.exceptions.ConnectionError) as e:
+                logger.error(f"❌ Species service connection error: {e}")
+                self._species_client = None
             
-            self._is_connected = True
-            logger.info("✅ Successfully connected to all SOAP services")
-            return True
+            # Considerar conexión exitosa si al menos especies está disponible
+            self._is_connected = species_connected
             
-        except (TransportError, requests.exceptions.ConnectionError) as e:
-            logger.error(f"❌ Connection error: {e}")
-            self._is_connected = False
-            return False
+            if self._is_connected:
+                if zones_connected and species_connected:
+                    logger.info("✅ Successfully connected to all SOAP services")
+                elif species_connected:
+                    logger.info("✅ Connected to species service (zones service unavailable)")
+                return True
+            else:
+                logger.error("❌ Failed to connect to any SOAP services")
+                return False
+                
         except Exception as e:
             logger.error(f"❌ Unexpected error during connection: {e}")
             self._is_connected = False
@@ -117,16 +133,14 @@ class SOAPClientManager:
                 
         except Exception as e:
             logger.warning(f"Connection test warning: {e}")
-            # No lanzar error aquí, solo advertir
-
-    def is_connected(self) -> bool:
+            # No lanzar error aquí, solo advertir    def is_connected(self) -> bool:
         """
         Verificar si está conectado a los servicios SOAP
         
         Returns:
-            bool: True si está conectado, False en caso contrario
+            bool: True si está conectado al menos al servicio de especies
         """
-        return self._is_connected and self._zones_client is not None and self._species_client is not None
+        return self._is_connected and self._species_client is not None
 
     def disconnect(self):
         """Desconectar de los servicios SOAP"""
@@ -135,9 +149,7 @@ class SOAPClientManager:
         self._is_connected = False
         logger.info("Disconnected from SOAP services")
 
-    # ==================== MÉTODOS PARA ZONAS ====================
-
-    def get_all_zones(self) -> List[ZoneData]:
+    # ==================== MÉTODOS PARA ZONAS ====================    def get_all_zones(self) -> List[ZoneData]:
         """
         Obtener todas las zonas
         
@@ -146,6 +158,10 @@ class SOAPClientManager:
         """
         if not self.is_connected():
             raise Exception("Not connected to SOAP services")
+        
+        if not self._zones_client:
+            logger.warning("Zones service not available, trying species service")
+            return self.get_zones_from_species_service()
         
         try:
             logger.info("Fetching all zones from SOAP service")
