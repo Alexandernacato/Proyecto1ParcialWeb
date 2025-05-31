@@ -73,22 +73,12 @@ public class CrudSpeciesService {
     
     // READ - Obtener todas las especies
     @WebMethod(operationName = "getAllTreeSpecies")
-    public List<TreeSpeciesInfo> getAllTreeSpecies() {
+    public List<TreeSpecies> getAllTreeSpecies() {
         LOGGER.info("Obteniendo todas las especies");
-        List<TreeSpeciesInfo> result = new ArrayList<>();
+        List<TreeSpecies> result = new ArrayList<>();
         
         try {
-            List<TreeSpecies> allSpecies = treeSpeciesDAO.findAll();
-            List<EstadoConservacion> conservationStates = treeSpeciesDAO.getAllEstadosConservacion();
-            List<Zone> zones = treeSpeciesDAO.getAllZones();
-            
-            for (TreeSpecies species : allSpecies) {
-                TreeSpeciesInfo info = convertToTreeSpeciesInfo(species, conservationStates, zones);
-                if (info != null) {
-                    result.add(info);
-                }
-            }
-            
+            result = treeSpeciesDAO.findAll();
             LOGGER.info("Obtenidas " + result.size() + " especies");
             
         } catch (Exception e) {
@@ -101,16 +91,11 @@ public class CrudSpeciesService {
     
     // READ - Obtener especie por ID
     @WebMethod(operationName = "getTreeSpeciesById")
-    public TreeSpeciesInfo getTreeSpeciesById(@WebParam(name = "id") int id) {
+    public TreeSpecies getTreeSpeciesById(@WebParam(name = "id") int id) {
         LOGGER.info("Obteniendo especie con ID: " + id);
         
         try {
-            TreeSpecies species = treeSpeciesDAO.findById(id);
-            if (species != null) {
-                List<EstadoConservacion> conservationStates = treeSpeciesDAO.getAllEstadosConservacion();
-                List<Zone> zones = treeSpeciesDAO.getAllZones();
-                return convertToTreeSpeciesInfo(species, conservationStates, zones);
-            }
+            return treeSpeciesDAO.findById(id);
         } catch (Exception e) {
             LOGGER.severe("Error al obtener especie por ID: " + e.getMessage());
             e.printStackTrace();
@@ -252,87 +237,7 @@ public class CrudSpeciesService {
         return false;
     }
     
-    /**
-     * Convertir TreeSpecies a TreeSpeciesInfo
-     */
-    private TreeSpeciesInfo convertToTreeSpeciesInfo(TreeSpecies species, 
-            List<EstadoConservacion> conservationStates, List<Zone> zones) {
-        if (species == null) {
-            return null;
-        }
-        
-        TreeSpeciesInfo info = new TreeSpeciesInfo();
-        info.setId(species.getId());
-        info.setNombreComun(species.getNombreComun());
-        info.setNombreCientifico(species.getNombreCientifico());
-        info.setEstadoConservacionId(species.getEstadoConservacionId());
-        info.setZonaId(species.getZonaId());
-        info.setActivo(species.isActivo());
-        
-        // Buscar nombre del estado de conservación
-        if (species.getEstadoConservacionId() != null) {
-            for (EstadoConservacion state : conservationStates) {
-                if (state.getId() == species.getEstadoConservacionId()) {
-                    info.setEstadoConservacion(state.getNombre());
-                    break;
-                }
-            }
-        }
-        
-        // Buscar nombre de la zona
-        if (species.getZonaId() != null) {
-            for (Zone zone : zones) {
-                if (zone.getId() == species.getZonaId()) {
-                    info.setZonaNombre(zone.getNombre());
-                    break;
-                }
-            }
-        }
-        
-        return info;
-    }
-    
     // ================= CLASES DE DATOS =================
-    
-    // Clase para información completa de especies
-    public static class TreeSpeciesInfo {
-        private int id;
-        private String nombreComun;
-        private String nombreCientifico;
-        private Integer estadoConservacionId;
-        private String estadoConservacion;
-        private Integer zonaId;
-        private String zonaNombre;
-        private boolean activo;
-        
-        // Constructores
-        public TreeSpeciesInfo() {}
-        
-        // Getters y Setters
-        public int getId() { return id; }
-        public void setId(int id) { this.id = id; }
-        
-        public String getNombreComun() { return nombreComun; }
-        public void setNombreComun(String nombreComun) { this.nombreComun = nombreComun; }
-        
-        public String getNombreCientifico() { return nombreCientifico; }
-        public void setNombreCientifico(String nombreCientifico) { this.nombreCientifico = nombreCientifico; }
-        
-        public Integer getEstadoConservacionId() { return estadoConservacionId; }
-        public void setEstadoConservacionId(Integer estadoConservacionId) { this.estadoConservacionId = estadoConservacionId; }
-        
-        public String getEstadoConservacion() { return estadoConservacion; }
-        public void setEstadoConservacion(String estadoConservacion) { this.estadoConservacion = estadoConservacion; }
-        
-        public Integer getZonaId() { return zonaId; }
-        public void setZonaId(Integer zonaId) { this.zonaId = zonaId; }
-        
-        public String getZonaNombre() { return zonaNombre; }
-        public void setZonaNombre(String zonaNombre) { this.zonaNombre = zonaNombre; }
-        
-        public boolean isActivo() { return activo; }
-        public void setActivo(boolean activo) { this.activo = activo; }
-    }
     
     // Clase para información de zonas
     public static class ZoneInfo {

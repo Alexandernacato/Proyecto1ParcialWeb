@@ -29,6 +29,11 @@ class Zone:
     id: int
     nombre: str
     descripcion: Optional[str] = None
+    tipoBosque: Optional[str] = None
+    areaHa: float = 0.0
+    activo: bool = True
+    fechaCreacion: Optional[datetime] = None
+    fechaModificacion: Optional[datetime] = None
 
 
 @dataclass

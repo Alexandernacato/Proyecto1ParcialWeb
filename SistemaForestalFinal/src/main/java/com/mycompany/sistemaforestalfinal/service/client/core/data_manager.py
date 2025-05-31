@@ -5,12 +5,8 @@ Gestiona operaciones de datos y filtrado para el sistema forestal
 
 from typing import List, Optional, Callable, Any
 import threading
-try:
-    from soap_client import SOAPClientManager
-    from models import TreeSpecies, Zone, ConservationState, SearchFilter
-except ImportError:
-    from .soap_client import SOAPClientManager
-    from .models import TreeSpecies, Zone, ConservationState, SearchFilter
+from .soap_client import SOAPClientManager
+from .models import TreeSpecies, Zone, ConservationState, SearchFilter
 
 
 class DataManager:
@@ -77,10 +73,14 @@ class DataManager:
     def _convert_to_zone(self, zone_raw) -> Zone:
         """Convertir zona raw a modelo Zone"""
         return Zone(
-            id=zone_raw.id,
-            nombre=zone_raw.nombre,
-            tipoBosque=getattr(zone_raw, 'tipoBosque', ''),
-            areaHa=getattr(zone_raw, 'areaHa', 0.0)
+            id=getattr(zone_raw, 'id', 0),
+            nombre=getattr(zone_raw, 'nombre', ''),
+            descripcion=getattr(zone_raw, 'descripcion', None),
+            tipoBosque=getattr(zone_raw, 'tipoBosque', None),
+            areaHa=float(getattr(zone_raw, 'areaHa', 0.0)) if getattr(zone_raw, 'areaHa', None) else 0.0,
+            activo=getattr(zone_raw, 'activo', True),
+            fechaCreacion=getattr(zone_raw, 'fechaCreacion', None),
+            fechaModificacion=getattr(zone_raw, 'fechaModificacion', None)
         )
     
     def _convert_to_conservation_state(self, state_raw) -> ConservationState:
@@ -314,3 +314,11 @@ class DataManager:
                     callback(False, f"Error deleting species: {e}")
                     
         threading.Thread(target=_delete_thread, daemon=True).start()
+    
+    def _notify_data_change(self, event_type: str, data: Any = None):
+        """Notificar cambios de datos a todos los callbacks registrados"""
+        for callback in self._data_callbacks:
+            try:
+                callback(event_type, data)
+            except Exception as e:
+                print(f"Error in data change callback: {e}")
