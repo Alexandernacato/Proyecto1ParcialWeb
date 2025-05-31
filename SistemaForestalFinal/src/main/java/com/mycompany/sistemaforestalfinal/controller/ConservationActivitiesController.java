@@ -63,7 +63,7 @@ public class ConservationActivitiesController extends HttpServlet {
 
                 case "update":
                     int id = Integer.parseInt(request.getParameter("id"));
-                    ConservationActivities ca = conservationActivitiesService.getConservationActivityById(id);
+                    ConservationActivities ca = conservationActivitiesService.getActivityById(id);
                     if (ca == null) {
                         request.setAttribute("error", "Actividad de conservación no encontrada con id " + id);
                         request.getRequestDispatcher("/ConservationActivities.jsp").forward(request, response);
@@ -77,12 +77,12 @@ public class ConservationActivitiesController extends HttpServlet {
 
                 case "delete":
                     int idDelete = Integer.parseInt(request.getParameter("id"));
-                    conservationActivitiesService.deleteConservationActivity(idDelete);
+                    conservationActivitiesService.deleteActivity(idDelete);
                     response.sendRedirect(request.getContextPath() + "/conservationactivities");
                     break;
 
                 default:
-                    List<ConservationActivities> lista = conservationActivitiesService.getAllConservationActivities();
+                    List<ConservationActivities> lista = conservationActivitiesService.getAllActivities();
 
                     List<TipoActividad> tiposActividad = tipoActividadService.getAllTiposActividad();
                     System.out.println("📋 TIPOS DE ACTIVIDAD CARGADOS:");
@@ -136,10 +136,10 @@ public class ConservationActivitiesController extends HttpServlet {
 
         try {
             if (idParam == null || idParam.isEmpty() || "0".equals(idParam)) {
-                conservationActivitiesService.createConservationActivity(conservationActivity);
+                conservationActivitiesService.createActivity(conservationActivity);
             } else {
                 conservationActivity.setId(Integer.parseInt(idParam));
-                conservationActivitiesService.updateConservationActivity(conservationActivity);
+                conservationActivitiesService.updateActivity(conservationActivity);
             }
             response.sendRedirect(request.getContextPath() + "/conservationactivities");
         } catch (Exception e) {
