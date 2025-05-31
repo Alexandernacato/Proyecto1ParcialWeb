@@ -115,6 +115,7 @@ Servers/
 # Archivos de log
 *.log
 logs/
+ERROS.json
 
 # Archivos de configuración sensibles
 config.properties
