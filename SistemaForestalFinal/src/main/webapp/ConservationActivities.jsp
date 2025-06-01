@@ -95,12 +95,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalFormularioTipos" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content" id="TiposModal"></div>
-    </div>
-</div>
-
 <!-- JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
@@ -117,15 +111,6 @@ $(document).ready(function () {
             
         });
     });
-    $('#abrirModalTipos').click(function (e) {
-        e.preventDefault();
-        $('#TiposModal').load($(this).attr('href'), function () {
-            new bootstrap.Modal(document.getElementById('modalFormularioTipos')).show();
-            
-        });
-    });
-
-
     $(document).on('click', 'a.editarBtn', function (e) {
         e.preventDefault();
         $('#contenidoModal').load($(this).attr('href'), function () {
