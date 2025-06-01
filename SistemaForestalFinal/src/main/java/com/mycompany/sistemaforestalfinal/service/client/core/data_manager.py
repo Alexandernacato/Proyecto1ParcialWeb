@@ -411,6 +411,60 @@ class DataManager:
                 callback(False, f"Error deleting zone: {e}")
             return False
     
+    def get_zone_by_id(self, zone_id: int) -> Optional[Zone]:
+        """Obtiene una zona específica por ID"""
+        try:
+            if self.zone_client:
+                response = self.zone_client.service.getZoneById(id=zone_id)
+                if response:
+                    # Convertir respuesta SOAP a objeto Zone
+                    tipo_bosque_str = getattr(response, 'tipoBosque', '')
+                    tipo_bosque = TipoBosque.from_string(tipo_bosque_str) if tipo_bosque_str else None
+                    
+                    zone = Zone(
+                        id=getattr(response, 'id', 0),
+                        nombre=getattr(response, 'nombre', ''),
+                        descripcion=getattr(response, 'descripcion', None),
+                        tipo_bosque=tipo_bosque,
+                        area_ha=getattr(response, 'areaHa', 0.0),
+                        activo=getattr(response, 'activo', True),
+                        fecha_creacion=self._parse_datetime(getattr(response, 'fechaCreacion', None)),
+                        fecha_modificacion=self._parse_datetime(getattr(response, 'fechaModificacion', None))
+                    )
+                    return zone
+                return None
+            else:
+                print("⚠️  SOAP client not available - cannot get zone by ID")
+                return None
+        except Exception as e:
+            print(f"❌ Error al obtener zona por ID {zone_id}: {e}")
+            return None
+    
+    def search_zones_by_name(self, name_query: str, exact_match: bool = False) -> List[Zone]:
+        """Busca zonas por nombre"""
+        try:
+            # Obtener todas las zonas y filtrar localmente
+            all_zones = self.get_zones()
+            
+            if not name_query:
+                return all_zones
+            
+            query = name_query.strip()
+            if not query:
+                return all_zones
+            
+            # Filtrar por nombre
+            if exact_match:
+                filtered_zones = [z for z in all_zones if z.nombre.lower() == query.lower()]
+            else:
+                filtered_zones = [z for z in all_zones if query.lower() in z.nombre.lower()]
+            
+            return filtered_zones
+            
+        except Exception as e:
+            print(f"❌ Error al buscar zonas por nombre '{name_query}': {e}")
+            return []
+
     def get_tipos_bosque(self) -> List[TipoBosque]:
         """Obtiene todos los tipos de bosque disponibles"""
         return list(TipoBosque)

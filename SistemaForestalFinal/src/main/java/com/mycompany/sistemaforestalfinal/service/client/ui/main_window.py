@@ -348,16 +348,9 @@ class MainWindow:
             
             # Especies
             'view_all_species': lambda: self._cambiar_tab_y_ejecutar("species", "ver_todas"),
-            'create_species': lambda: self._cambiar_tab_y_ejecutar("species", "crear"),
-            'edit_species': lambda: self._cambiar_tab_y_ejecutar("species", "editar"),
-            'delete_species': lambda: self._cambiar_tab_y_ejecutar("species", "eliminar"),
-            'search_by_id': self._buscar_por_id,
-            'search_by_name': self._buscar_por_nombre,
             
             # Zonas
             'view_zones': lambda: self._cambiar_tab_y_ejecutar("zones", "ver_todas"),
-            'create_zone': lambda: self._cambiar_tab_y_ejecutar("zones", "crear"),
-            'delete_zone': lambda: self._cambiar_tab_y_ejecutar("zones", "eliminar"),
             
             # Utilidades
             'refresh_data': self._refrescar_datos,
@@ -384,43 +377,27 @@ class MainWindow:
     
     def _buscar_por_id(self):
         """Buscar especie por ID"""
+        # This method might be deprecated or refactored if search is centralized
         self.content_area.cambiar_tab("species")
         self.logger.info("🔍 Activating Search by ID functionality")
         
-        # Trigger ID search dialog in SpeciesManager
         if self.species_manager:
-            # Create a simple input dialog for ID
-            try:
-                import tkinter.simpledialog as simpledialog
-                species_id = simpledialog.askinteger(
-                    "Search by ID", 
-                    "Enter Species ID:",
-                    minvalue=1
-                )
-                if species_id:
-                    self.species_manager._buscar_por_id_con_id(species_id)
-            except Exception as e:
-                self.logger.error(f"Error in ID search: {e}")
-    
+            # This now directly calls the species_manager's unified search
+            # It assumes the species_manager's search UI is already visible
+            # and the user will input the ID there.
+            # For a direct dialog, that logic would be here or in species_manager
+            pass # Functionality moved to species_manager search bar
+
     def _buscar_por_nombre(self):
         """Buscar especie por nombre"""
+        # This method might be deprecated or refactored if search is centralized
         self.content_area.cambiar_tab("species")
         self.logger.info("🔍 Activating Search by Name functionality")
-        
-        # Trigger name search dialog in SpeciesManager
+
         if self.species_manager:
-            # Create a simple input dialog for name
-            try:
-                import tkinter.simpledialog as simpledialog
-                species_name = simpledialog.askstring(
-                    "Search by Name", 
-                    "Enter Species Name (common or scientific):"
-                )
-                if species_name and species_name.strip():
-                    self.species_manager._buscar_por_nombre(species_name.strip())
-            except Exception as e:
-                self.logger.error(f"Error in name search: {e}")
-    
+            # Similar to _buscar_por_id, functionality moved to species_manager search bar
+            pass # Functionality moved to species_manager search bar
+
     def _refrescar_datos(self):
         """Refrescar todos los datos"""
         self.logger.info("🔄 Refreshing all data...")

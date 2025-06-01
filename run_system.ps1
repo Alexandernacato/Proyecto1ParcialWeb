@@ -86,19 +86,64 @@ if (-not $speciesReady -and -not $zonesReady) {
     Write-Host "ADVERTENCIA: Solo el servicio Species esta disponible" -ForegroundColor Yellow
 }
 
-# 6. Verificar Python e instalar dependencias
-Write-Host "Verificando Python..." -ForegroundColor Cyan
+# 6. Configurar entorno virtual de Python
+Write-Host "Configurando entorno virtual de Python..." -ForegroundColor Cyan
+
+# Verificar si existe el entorno virtual
+if (-not (Test-Path "venv")) {
+    Write-Host "Creando entorno virtual..." -ForegroundColor Yellow
+    python -m venv venv
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: No se pudo crear el entorno virtual" -ForegroundColor Red
+        exit 1
+    }
+}
+
+# Activar el entorno virtual
+Write-Host "Activando entorno virtual..." -ForegroundColor Cyan
+$venvActivateScript = ".\venv\Scripts\Activate.ps1"
+
+if (Test-Path $venvActivateScript) {
+    try {
+        # Cambiar política de ejecución temporalmente si es necesario
+        $currentPolicy = Get-ExecutionPolicy -Scope CurrentUser
+        if ($currentPolicy -eq "Restricted") {
+            Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+        }
+        
+        & $venvActivateScript
+        Write-Host "   Entorno virtual activado correctamente" -ForegroundColor Green
+    } catch {
+        Write-Host "ERROR activando entorno virtual: $($_.Exception.Message)" -ForegroundColor Red
+        exit 1
+    }
+} else {
+    Write-Host "ERROR: Script de activación no encontrado en: $venvActivateScript" -ForegroundColor Red
+    exit 1
+}
+
+# Verificar Python en el entorno virtual
 try {
     $pythonVersion = python --version 2>&1
-    Write-Host "   Python encontrado: $pythonVersion" -ForegroundColor Green
-    
-    if (Test-Path "requirements.txt") {
-        Write-Host "Instalando dependencias..." -ForegroundColor Cyan
-        pip install -r requirements.txt --quiet 2>&1 | Out-Null
-    }
+    Write-Host "   Python en venv: $pythonVersion" -ForegroundColor Green
 } catch {
-    Write-Host "ERROR con Python: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "ERROR con Python en entorno virtual: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
+}
+
+# Instalar/actualizar dependencias
+if (Test-Path "requirements.txt") {
+    Write-Host "Instalando/actualizando dependencias..." -ForegroundColor Cyan
+    pip install --upgrade pip --quiet
+    pip install -r requirements.txt --quiet
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "   Dependencias instaladas correctamente" -ForegroundColor Green
+    } else {
+        Write-Host "ADVERTENCIA: Hubo problemas instalando algunas dependencias" -ForegroundColor Yellow
+    }
+} else {
+    Write-Host "ADVERTENCIA: No se encontró requirements.txt" -ForegroundColor Yellow
 }
 
 # 7. Iniciar cliente GUI
@@ -117,12 +162,23 @@ if (Test-Path $clientPath) {
     Write-Host ""
     Write-Host "Para detener los servidores:" -ForegroundColor Yellow
     Write-Host "   Get-Job | Stop-Job; Get-Job | Remove-Job" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "Presiona cualquier tecla para salir (los servidores seguiran ejecutandose)..." -ForegroundColor White
+    Write-Host ""    Write-Host "Presiona cualquier tecla para salir (los servidores seguiran ejecutandose)..." -ForegroundColor White
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    
+    # Desactivar entorno virtual
+    if (Get-Command "deactivate" -ErrorAction SilentlyContinue) {
+        deactivate
+        Write-Host "Entorno virtual desactivado" -ForegroundColor Cyan
+    }
     
 } else {
     Write-Host "ERROR: Cliente no encontrado en: $clientPath" -ForegroundColor Red
     Write-Host "Deteniendo servidores..." -ForegroundColor Yellow
     Get-Job | Stop-Job; Get-Job | Remove-Job
+    
+    # Desactivar entorno virtual
+    if (Get-Command "deactivate" -ErrorAction SilentlyContinue) {
+        deactivate
+        Write-Host "Entorno virtual desactivado" -ForegroundColor Cyan
+    }
 }

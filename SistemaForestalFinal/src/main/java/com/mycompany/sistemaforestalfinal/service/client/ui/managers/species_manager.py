@@ -155,14 +155,6 @@ class SpeciesManager:
             height=35
         )
         self.search_id_entry.pack(side="left")
-        
-        ctk.CTkButton(
-            self.search_id_frame,
-            text="🔍 Find by ID",
-            command=self._buscar_por_id,
-            width=100,
-            **self.theme_manager.obtener_estilo_boton("success")
-        ).pack(side="left", padx=5)
     
     def _crear_lista_especies(self, parent):
         """Crear lista scrollable de especies"""

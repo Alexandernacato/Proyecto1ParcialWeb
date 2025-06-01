@@ -80,27 +80,20 @@ class SidebarComponent:
     def _crear_grupo_especies(self):
         """Crear grupo de botones de especies"""
         self._crear_separador("🌳 Species Operations")
-        
+    
         botones_especies = [
-            ("👁️ View All Species", "view_all_species", "info"),
-            ("➕ Create Species", "create_species", "success"),
-            ("✏️ Edit Species", "edit_species", "warning"),
-            ("🗑️ Delete Species", "delete_species", "error"),
-            ("🔍 Search by ID", "search_by_id", "info"),
-            ("🔍 Search by Name", "search_by_name", "info")
+            ("👁️ View All Species", "view_all_species", "info")
         ]
-        
+    
         for texto, comando, tipo in botones_especies:
             self._crear_boton(texto, comando, tipo)
-    
+            
     def _crear_grupo_zonas(self):
         """Crear grupo de botones de zonas"""
         self._crear_separador("🌍 Zones Operations")
         
         botones_zonas = [
-            ("👁️ View Zones", "view_zones", "info"),
-            ("➕ Create Zone", "create_zone", "success"),
-            ("🗑️ Delete Zone", "delete_zone", "error")
+            ("👁️ View Zones", "view_zones", "info")
         ]
         
         for texto, comando, tipo in botones_zonas:
