@@ -32,7 +32,7 @@ class ForestManagementClient:
         """Inicializar cliente con arquitectura modular"""
         # Inicializar componentes core
         self.soap_client = SOAPClientManager()
-        self.data_manager = DataManager(self.soap_client)
+        self.data_manager = DataManager()  # DataManager uses its own SOAP client with zeep
         
         # Configurar ventana principal con arquitectura modular
         self.main_window = MainWindow(

@@ -68,13 +68,15 @@ try {
 $clientPath = ".\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\client\client.py"
 
 if (Test-Path $clientPath) {
-    Write-Host "🖥️  Iniciando cliente GUI..." -ForegroundColor Green
+    Write-Host "🖥️  Iniciando cliente GUI simplificado..." -ForegroundColor Green
+    Write-Host "📋 El cliente mostrará errores en su propia ventana" -ForegroundColor Cyan
     Start-Process python -ArgumentList $clientPath -WindowStyle Normal
     
     Write-Host ""
     Write-Host "🎉 === SISTEMA INICIADO CORRECTAMENTE ===" -ForegroundColor Green
     Write-Host "🌐 Servidor SOAP: http://localhost:8282/TreeSpeciesCrudService?wsdl" -ForegroundColor Cyan
     Write-Host "🖥️  Cliente GUI: Ejecutándose en ventana separada" -ForegroundColor Cyan
+    Write-Host "📊 Log de errores: client_debug.log" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Para detener el servidor:" -ForegroundColor Yellow
     Write-Host "   Get-Job | Stop-Job; Get-Job | Remove-Job" -ForegroundColor Yellow
