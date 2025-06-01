@@ -1,4 +1,5 @@
 com\mycompany\sistemaforestalfinal\service\server\CrudZonesService.class
+com\mycompany\sistemaforestalfinal\controller\TipoActividadController.class
 com\mycompany\sistemaforestalfinal\dao\ZoneDAO.class
 com\mycompany\sistemaforestalfinal\dao\UsuarioDAO.class
 com\mycompany\sistemaforestalfinal\resources\JakartaEE10Resource.class
@@ -7,6 +8,7 @@ com\mycompany\sistemaforestalfinal\service\server\CrudZonesPublication.class
 com\mycompany\sistemaforestalfinal\security\LogoutServlet.class
 com\mycompany\sistemaforestalfinal\model\ConservationActivities.class
 com\mycompany\sistemaforestalfinal\service\UsuarioService.class
+com\mycompany\sistemaforestalfinal\controller\ConservationActivitiesController.class
 com\mycompany\sistemaforestalfinal\service\server\CrudSpeciesService.class
 com\mycompany\sistemaforestalfinal\dao\TreeSpeciesDAO.class
 com\mycompany\sistemaforestalfinal\dao\ConservationActivitiesDAO.class

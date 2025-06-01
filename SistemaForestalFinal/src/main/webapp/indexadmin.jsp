@@ -47,7 +47,7 @@
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-tasks"></i> Actividades</h5>
                     <p class="card-text">Control de campañas de conservación y plantaciones.</p>
-                    <a href="${pageContext.request.contextPath}/actividades" class="btn btn-dark">Ver Actividades</a>
+                    <a href="${pageContext.request.contextPath}/conservationactivities" class="btn btn-dark">Ver Actividades</a>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-map-marked-alt"></i> Zonas</h5>
                     <p class="card-text">Mapa y gestión de zonas geográficas de conservación.</p>
-                    <a href="${pageContext.request.contextPath}/zonas" class="btn btn-light">Ver Zonas</a>
+                    <a href="${pageContext.request.contextPath}/zones" class="btn btn-light">Ver Zonas</a>
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-seedling"></i> Especies Forestales</h5>
                     <p class="card-text">Listado y control de especies en los ecosistemas.</p>
-                    <a href="${pageContext.request.contextPath}/especies" class="btn btn-light">Ver Especies</a>
+                    <a href="${pageContext.request.contextPath}/treespecies" class="btn btn-light">Ver Especies</a>
                 </div>
             </div>
         </div>

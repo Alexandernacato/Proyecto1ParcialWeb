@@ -2,10 +2,12 @@ C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\my
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\JakartaRestConfiguration.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\EstadoConservacionService.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\TestConnection.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\controller\ConservationActivitiesController.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\model\TipoActividad.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\dao\TipoActividadDAO.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\model\ConservationActivities.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\dao\ConnectionBdd.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\controller\TipoActividadController.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\security\LogoutServlet.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\dao\TreeSpeciesDAO.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\server\CrudZonesService.java
