@@ -1,10 +1,16 @@
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\dao\ConservationActivitiesDAO.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\JakartaRestConfiguration.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\EstadoConservacionService.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\TestConnection.java
-C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\server\listSpeciesPublication.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\model\TipoActividad.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\dao\TipoActividadDAO.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\model\ConservationActivities.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\dao\ConnectionBdd.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\security\LogoutServlet.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\dao\TreeSpeciesDAO.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\server\CrudZonesService.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\ConservationActivitiesService.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\server\CrudSpeciesPublication.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\ZoneService.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\model\TreeSpecies.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\dao\EstadoConservacionDAO.java
@@ -14,6 +20,8 @@ C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\my
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\TreeSpeciesService.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\resources\JakartaEE10Resource.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\model\TipoBosque.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\server\CrudZonesPublication.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\TipoActividadService.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\controller\ZoneController.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\security\PasswordUtil.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\security\AuthorizationFilter.java
@@ -22,4 +30,4 @@ C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\my
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\UsuarioService.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\model\Usuario.java
 C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\controller\LoginServlet.java
-C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\server\lsitSpeciesService.java
+C:\Users\Alexander\Proyecto1ParcialWeb\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\server\CrudSpeciesService.java

@@ -4,6 +4,16 @@
 !Indicaciones.md
 !DeveloperTasks.md
 
+SistemaForestalFinal/target/
+
+# Python - Entorno Virtual
+venv/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.egg-info/
 
 # Archivos temporales del sistema
 *.tmp
@@ -105,6 +115,7 @@ Servers/
 # Archivos de log
 *.log
 logs/
+ERROS.json
 
 # Archivos de configuración sensibles
 config.properties

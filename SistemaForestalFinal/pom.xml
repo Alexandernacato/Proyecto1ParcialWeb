@@ -64,7 +64,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.mycompany.sistemaforestalfinal.service.server.listSpeciesPublication</mainClass>
+                    <mainClass>com.mycompany.sistemaforestalfinal.service.server.CrudSpeciesPublication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
