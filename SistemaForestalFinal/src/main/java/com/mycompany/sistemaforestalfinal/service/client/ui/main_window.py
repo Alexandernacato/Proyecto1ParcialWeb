@@ -369,8 +369,7 @@ class MainWindow:
         """Cambiar a una pestaña y ejecutar método del gestor correspondiente"""
         # Cambiar a la pestaña
         self.content_area.cambiar_tab(tab_name)
-        
-        # Ejecutar método
+          # Ejecutar método
         if tab_name == "species" and hasattr(self.species_manager, metodo):
             getattr(self.species_manager, metodo)()
         elif tab_name == "zones" and hasattr(self.zones_manager, metodo):
@@ -386,12 +385,41 @@ class MainWindow:
     def _buscar_por_id(self):
         """Buscar especie por ID"""
         self.content_area.cambiar_tab("species")
-        self.logger.info("🔍 Search by ID functionality - To be implemented")
+        self.logger.info("🔍 Activating Search by ID functionality")
+        
+        # Trigger ID search dialog in SpeciesManager
+        if self.species_manager:
+            # Create a simple input dialog for ID
+            try:
+                import tkinter.simpledialog as simpledialog
+                species_id = simpledialog.askinteger(
+                    "Search by ID", 
+                    "Enter Species ID:",
+                    minvalue=1
+                )
+                if species_id:
+                    self.species_manager._buscar_por_id_con_id(species_id)
+            except Exception as e:
+                self.logger.error(f"Error in ID search: {e}")
     
     def _buscar_por_nombre(self):
         """Buscar especie por nombre"""
         self.content_area.cambiar_tab("species")
-        self.logger.info("🔍 Search by name functionality - To be implemented")
+        self.logger.info("🔍 Activating Search by Name functionality")
+        
+        # Trigger name search dialog in SpeciesManager
+        if self.species_manager:
+            # Create a simple input dialog for name
+            try:
+                import tkinter.simpledialog as simpledialog
+                species_name = simpledialog.askstring(
+                    "Search by Name", 
+                    "Enter Species Name (common or scientific):"
+                )
+                if species_name and species_name.strip():
+                    self.species_manager._buscar_por_nombre(species_name.strip())
+            except Exception as e:
+                self.logger.error(f"Error in name search: {e}")
     
     def _refrescar_datos(self):
         """Refrescar todos los datos"""

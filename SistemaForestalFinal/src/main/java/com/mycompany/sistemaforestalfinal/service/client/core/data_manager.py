@@ -211,6 +211,86 @@ class DataManager:
             print(f"❌ Error en búsqueda: {e}")
             return []
     
+    def get_species_by_id(self, species_id: int) -> Optional[TreeSpecies]:
+        """Busca una especie específica por ID usando SOAP"""
+        try:
+            if self.species_client:
+                response = self.species_client.service.getTreeSpeciesById(id=species_id)
+                if response:
+                    # Convert single species response
+                    return self._convert_single_species_response(response)
+                else:
+                    print(f"⚠️  No species found with ID: {species_id}")
+                    return None
+            else:
+                # Simulación: buscar en cache local
+                all_species = self.get_species()
+                for species in all_species:
+                    if species.id == species_id:
+                        print(f"✅ Species found (simulated): {species.nombreComun}")
+                        return species
+                print(f"⚠️  No species found with ID: {species_id} (simulated)")
+                return None
+                
+        except Exception as e:
+            print(f"❌ Error al buscar especie por ID {species_id}: {e}")
+            return None
+    
+    def search_species_by_name(self, name_query: str, exact_match: bool = False) -> List[TreeSpecies]:
+        """Busca especies por nombre (común o científico)"""
+        try:
+            if not name_query or not name_query.strip():
+                return []
+            
+            name_query = name_query.strip().lower()
+            all_species = self.get_species()
+            
+            if not all_species:
+                print("⚠️  No species available for search")
+                return []
+            
+            matching_species = []
+            
+            for species in all_species:
+                # Check common name
+                common_name = (species.nombreComun or "").lower()
+                # Check scientific name
+                scientific_name = (species.nombreCientifico or "").lower()
+                
+                if exact_match:
+                    # Exact match search
+                    if (common_name == name_query or 
+                        scientific_name == name_query):
+                        matching_species.append(species)
+                else:
+                    # Partial match search
+                    if (name_query in common_name or 
+                        name_query in scientific_name):
+                        matching_species.append(species)
+            
+            print(f"✅ Found {len(matching_species)} species matching '{name_query}'")
+            return matching_species
+            
+        except Exception as e:
+            print(f"❌ Error searching species by name '{name_query}': {e}")
+            return []
+    
+    def _convert_single_species_response(self, response) -> TreeSpecies:
+        """Convierte respuesta SOAP individual a objeto TreeSpecies"""
+        try:
+            # Handle the response based on the SOAP service structure
+            return TreeSpecies(
+                id=getattr(response, 'id', 0),
+                nombreComun=getattr(response, 'nombreComun', ''),
+                nombreCientifico=getattr(response, 'nombreCientifico', None),
+                estadoConservacionId=getattr(response, 'estadoConservacionId', None),
+                zonaId=getattr(response, 'zonaId', None),
+                activo=getattr(response, 'activo', True)
+            )
+        except Exception as e:
+            print(f"❌ Error converting single species response: {e}")
+            return None
+    
     # ===========================================
     # OPERACIONES DE ZONAS (CORREGIDAS PARA USAR TipoBosque ENUM)
     # ===========================================
