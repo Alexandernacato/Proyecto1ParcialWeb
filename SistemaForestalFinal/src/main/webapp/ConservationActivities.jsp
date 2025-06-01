@@ -16,7 +16,7 @@
 <c:choose>
     <c:when test="${sessionScope.userRole eq 'admin'}">
         <!-- Solo el administrador puede abrir el modal para agregar actividad -->
-        <a href="${pageContext.request.contextPath}/conservationactivities?option=new" class="btn btn-primary mb-3" id="abrirModal">Agregar Nueva Actividad</a>
+        <a href="${pageContext.request.contextPath}/conservationactivities?option=new" class="btn btn-primary mb-3" id="abrirModal">Agregar Nueva Actividad</a>    
     </c:when>
     <c:otherwise>
         <!-- Usuarios no administradores reciben una alerta -->
@@ -95,6 +95,12 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalFormularioTipos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="TiposModal"></div>
+    </div>
+</div>
+
 <!-- JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
@@ -108,8 +114,17 @@ $(document).ready(function () {
         e.preventDefault();
         $('#contenidoModal').load($(this).attr('href'), function () {
             new bootstrap.Modal(document.getElementById('modalFormulario')).show();
+            
         });
     });
+    $('#abrirModalTipos').click(function (e) {
+        e.preventDefault();
+        $('#TiposModal').load($(this).attr('href'), function () {
+            new bootstrap.Modal(document.getElementById('modalFormularioTipos')).show();
+            
+        });
+    });
+
 
     $(document).on('click', 'a.editarBtn', function (e) {
         e.preventDefault();

@@ -4,8 +4,8 @@
 <div class="modal-header">
     <h5 class="modal-title">
         <c:choose>
-            <c:when test="${conservationActivity.id != 0}">Editar Actividad de Conservación</c:when>
-            <c:otherwise>Nueva Actividad de Conservación</c:otherwise>
+            <c:when test="${conservationActivity.id != 0}">Editar Actividad de ConservaciÃ³n</c:when>
+            <c:otherwise>Nueva Actividad de ConservaciÃ³n</c:otherwise>
         </c:choose>
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -36,14 +36,21 @@
 
         <div class="mb-3">
             <label class="form-label">Tipo de Actividad</label>
-            <select name="tipoActividadId" class="form-select" required>
-                <option value="">Seleccione un tipo de actividad</option>
-                <c:forEach var="tipoActividad" items="${tiposActividad}">
-                    <option value="${tipoActividad.id}" ${tipoActividad.id == conservationActivity.tipoActividadId ? "selected" : ""}>
-                        ${tipoActividad.nombre}
-                    </option>
-                </c:forEach>
-            </select>
+            
+            <div class="d-flex align-items-end gap-2">
+                <div class="flex-grow-1">
+                    <select id="tipoActividadSelect" name="tipoActividadId" class="form-select" required>
+                        <option value="">Seleccione un tipo de actividad</option>
+                        <c:forEach var="tipoActividad" items="${tiposActividad}">
+                            <option value="${tipoActividad.id}" ${tipoActividad.id == conservationActivity.tipoActividadId ? "selected" : ""}>
+                                ${tipoActividad.nombre}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+                
+            </div>
+            
         </div>
 
         <div class="mb-3">
