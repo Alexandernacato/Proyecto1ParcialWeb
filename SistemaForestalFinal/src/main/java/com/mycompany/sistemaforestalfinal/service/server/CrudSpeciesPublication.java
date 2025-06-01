@@ -1,7 +1,7 @@
 package com.mycompany.sistemaforestalfinal.service.server;
 
 import jakarta.xml.ws.Endpoint;
-public class CrudSpeciesPublication {
+public class CrudSpeciesPublication {   
     
     public static void main(String[] args) {
         try {

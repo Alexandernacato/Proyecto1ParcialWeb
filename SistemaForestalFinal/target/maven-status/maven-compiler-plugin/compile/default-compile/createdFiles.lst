@@ -20,6 +20,7 @@ com\mycompany\sistemaforestalfinal\dao\ConnectionBdd.class
 com\mycompany\sistemaforestalfinal\model\TreeSpecies.class
 com\mycompany\sistemaforestalfinal\model\Usuario.class
 com\mycompany\sistemaforestalfinal\controller\LoginServlet.class
+com\mycompany\sistemaforestalfinal\controller\ReportesController.class
 com\mycompany\sistemaforestalfinal\controller\ZoneController.class
 com\mycompany\sistemaforestalfinal\service\EstadoConservacionService.class
 com\mycompany\sistemaforestalfinal\JakartaRestConfiguration.class

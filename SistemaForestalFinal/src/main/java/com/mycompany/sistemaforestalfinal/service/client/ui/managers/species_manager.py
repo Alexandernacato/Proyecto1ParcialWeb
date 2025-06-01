@@ -82,7 +82,7 @@ class SpeciesManager:
         botones = [
             ("➕ Add", self.crear, "success"),
             ("✏️ Edit", self.editar, "warning"),
-            ("🗑️ Delete", self.eliminar, "error")
+           
         ]
         
         for texto, comando, tipo in botones:
@@ -100,6 +100,7 @@ class SpeciesManager:
         search_frame = ctk.CTkFrame(parent, fg_color="transparent")
         search_frame.pack(fill="x", padx=20, pady=10)
         
+        # Search input
         self.search_entry = ctk.CTkEntry(
             search_frame,
             placeholder_text="🔍 Search species...",
@@ -109,14 +110,15 @@ class SpeciesManager:
         self.search_entry.pack(side="left", padx=(0, 10))
         self.search_entry.bind("<KeyRelease>", self._al_cambiar_busqueda)
         
-        # Botón de búsqueda
-        ctk.CTkButton(
+        # Search type selector
+        self.search_type = ctk.CTkOptionMenu(
             search_frame,
-            text="🔍",
-            width=35,
-            command=self._buscar,
-            **self.theme_manager.obtener_estilo_boton("info")
-        ).pack(side="left", padx=5)
+            values=["Name", "ID"],
+            width=80,
+            height=35
+        )
+        self.search_type.pack(side="left", padx=5)
+        self.search_type.set("Name")
     
     def _crear_lista_especies(self, parent):
         """Crear lista scrollable de especies"""
@@ -281,18 +283,157 @@ class SpeciesManager:
             self._buscar()
     
     def _buscar(self):
-        """Buscar especies por término"""
-        if not self.termino_busqueda:
+        """Ejecutar búsqueda según el tipo seleccionado"""
+        search_term = self.search_entry.get().strip()
+        search_type = self.search_type.get()
+        
+        if not search_term:
             self.ver_todas()
             return
         
-        # Filtrar especies actuales
-        especies_filtradas = [
-            s for s in self.especies_actuales
-            if self.termino_busqueda.lower() in s.nombreComun.lower()
-        ]
+        self.logger.info(f"🔍 Searching by {search_type}: '{search_term}'")
         
-        self._mostrar_especies(especies_filtradas, f"Species matching '{self.termino_busqueda}'")
+        if search_type == "ID":
+            self._buscar_por_id_directo(search_term)
+        else:  # Name search
+            self._buscar_por_nombre(search_term)
+    
+    def _buscar_por_id_directo(self, id_text):
+        """Buscar especie por ID desde el campo de texto principal"""
+        try:
+            species_id = int(id_text)
+            self._buscar_por_id_con_id(species_id)
+        except ValueError:
+            self.logger.error(f"❌ Invalid ID format: '{id_text}'. Please enter a valid number.")
+            self._mostrar_especies([], f"Invalid ID: {id_text}")
+    
+    def _buscar_por_id(self):
+        """Buscar especie por ID desde el campo específico"""
+        id_text = self.search_id_entry.get().strip()
+        
+        if not id_text:
+            self.logger.warning("⚠️ Please enter an ID to search")
+            return
+        
+        try:
+            species_id = int(id_text)
+            self._buscar_por_id_con_id(species_id)
+        except ValueError:
+            self.logger.error(f"❌ Invalid ID format: '{id_text}'. Please enter a valid number.")
+            messagebox.showerror("Invalid ID", f"'{id_text}' is not a valid ID. Please enter a number.")
+    
+    def _buscar_por_id_con_id(self, species_id: int):
+        """Buscar especie por ID específico"""
+        self.logger.info(f"🔍 Searching for species with ID: {species_id}")
+        threading.Thread(target=self._buscar_por_id_thread, args=(species_id,), daemon=True).start()
+    
+    def _buscar_por_id_thread(self, species_id: int):
+        """Thread para buscar especie por ID"""
+        try:
+            # Use DataManager to search by ID
+            especie = self.data_manager.get_species_by_id(species_id)
+            
+            if especie:
+                # Update UI in main thread
+                self.content_area.parent.after(0, self._mostrar_especies, [especie], f"Species with ID: {species_id}")
+            else:
+                self.content_area.parent.after(0, self._mostrar_sin_resultados_id, species_id)
+                
+        except Exception as e:
+            self.content_area.parent.after(0, self.logger.error, f"Error searching by ID {species_id}: {e}")
+    
+    def _mostrar_sin_resultados_id(self, species_id: int):
+        """Mostrar mensaje cuando no se encuentra especie por ID"""
+        # Limpiar display actual
+        for widget in self.especies_scroll.winfo_children():
+            widget.destroy()
+        
+        # Mensaje de no encontrado
+        no_data_frame = ctk.CTkFrame(self.especies_scroll)
+        no_data_frame.pack(fill="x", padx=5, pady=20)
+        
+        no_data_label = ctk.CTkLabel(
+            no_data_frame,
+            text=f"🔍 No species found with ID: {species_id}",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color=self.theme_manager.obtener_color('warning')
+        )
+        no_data_label.pack(pady=20)
+        
+        # Botón para ver todas las especies
+        ctk.CTkButton(
+            no_data_frame,
+            text="🌳 View All Species",
+            command=self.ver_todas,
+            **self.theme_manager.obtener_estilo_boton("primary")
+        ).pack(pady=10)
+        
+        self.logger.warning(f"No species found with ID: {species_id}")
+    
+    def _buscar_por_nombre(self, name_query: str):
+        """Buscar especies por nombre"""
+        self.logger.info(f"🔍 Searching for species with name: '{name_query}'")
+        threading.Thread(target=self._buscar_por_nombre_thread, args=(name_query,), daemon=True).start()
+    
+    def _buscar_por_nombre_thread(self, name_query: str):
+        """Thread para buscar especies por nombre"""
+        try:
+            # Use DataManager to search by name
+            especies_encontradas = self.data_manager.search_species_by_name(name_query, exact_match=False)
+            
+            if especies_encontradas:
+                # Update UI in main thread
+                self.content_area.parent.after(0, self._mostrar_especies, especies_encontradas, f"Search results for: '{name_query}'")
+            else:
+                self.content_area.parent.after(0, self._mostrar_sin_resultados_nombre, name_query)
+                
+        except Exception as e:
+            self.content_area.parent.after(0, self.logger.error, f"Error searching by name '{name_query}': {e}")
+    
+    def _mostrar_sin_resultados_nombre(self, name_query: str):
+        """Mostrar mensaje cuando no se encuentran especies por nombre"""
+        # Limpiar display actual
+        for widget in self.especies_scroll.winfo_children():
+            widget.destroy()
+        
+        # Mensaje de no encontrado
+        no_data_frame = ctk.CTkFrame(self.especies_scroll)
+        no_data_frame.pack(fill="x", padx=5, pady=20)
+        
+        no_data_label = ctk.CTkLabel(
+            no_data_frame,
+            text=f"🔍 No species found matching: '{name_query}'",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color=self.theme_manager.obtener_color('warning')
+        )
+        no_data_label.pack(pady=20)
+        
+        # Sugerencia de búsqueda
+        suggestion_label = ctk.CTkLabel(
+            no_data_frame,
+            text="💡 Try searching with different keywords or check spelling",
+            font=ctk.CTkFont(size=12),
+            text_color=self.theme_manager.obtener_color('secondary')
+        )
+        suggestion_label.pack(pady=5)
+        
+        # Botón para ver todas las especies
+        ctk.CTkButton(
+            no_data_frame,
+            text="🌳 View All Species",
+            command=self.ver_todas,
+            **self.theme_manager.obtener_estilo_boton("primary")
+        ).pack(pady=10)
+        
+        self.logger.warning(f"No species found matching: '{name_query}'")
+    
+    def _limpiar_busqueda(self):
+        """Limpiar búsqueda y mostrar todas las especies"""
+        self.search_entry.delete(0, 'end')
+        self.search_id_entry.delete(0, 'end')
+        self.termino_busqueda = ""
+        self.logger.info("🗑️ Search cleared - showing all species")
+        self.ver_todas()
     
     def crear(self):
         """Crear nueva especie"""
@@ -526,3 +667,112 @@ class SpeciesManager:
         
         # Enfocar el primer campo
         nombre_comun_entry.focus()
+    
+    # ===========================================
+    # SEARCH METHODS IMPLEMENTATION
+    # ===========================================
+    
+    def _buscar_por_id_con_id(self, species_id: int):
+        """Buscar especie por ID específico"""
+        self.logger.info(f"🔍 Searching for species with ID: {species_id}")
+        threading.Thread(target=self._buscar_por_id_thread, args=(species_id,), daemon=True).start()
+    
+    def _buscar_por_id_thread(self, species_id: int):
+        """Thread para buscar especie por ID"""
+        try:
+            # Use DataManager to search by ID
+            especie = self.data_manager.get_species_by_id(species_id)
+            
+            if especie:
+                # Update UI in main thread
+                self.content_area.parent.after(0, self._mostrar_especies, [especie], f"Species with ID: {species_id}")
+            else:
+                self.content_area.parent.after(0, self._mostrar_sin_resultados_id, species_id)
+                
+        except Exception as e:
+            self.content_area.parent.after(0, self.logger.error, f"Error searching by ID {species_id}: {e}")
+    
+    def _mostrar_sin_resultados_id(self, species_id: int):
+        """Mostrar mensaje cuando no se encuentra especie por ID"""
+        # Limpiar display actual
+        for widget in self.especies_scroll.winfo_children():
+            widget.destroy()
+        
+        # Mensaje de no encontrado
+        no_data_frame = ctk.CTkFrame(self.especies_scroll)
+        no_data_frame.pack(fill="x", padx=5, pady=20)
+        
+        no_data_label = ctk.CTkLabel(
+            no_data_frame,
+            text=f"🔍 No species found with ID: {species_id}",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color=self.theme_manager.obtener_color('warning')
+        )
+        no_data_label.pack(pady=20)
+        
+        # Botón para ver todas las especies
+        ctk.CTkButton(
+            no_data_frame,
+            text="🌳 View All Species",
+            command=self.ver_todas,
+            **self.theme_manager.obtener_estilo_boton("primary")
+        ).pack(pady=10)
+        
+        self.logger.warning(f"No species found with ID: {species_id}")
+    
+    def _buscar_por_nombre(self, name_query: str):
+        """Buscar especies por nombre"""
+        self.logger.info(f"🔍 Searching for species with name: '{name_query}'")
+        threading.Thread(target=self._buscar_por_nombre_thread, args=(name_query,), daemon=True).start()
+    
+    def _buscar_por_nombre_thread(self, name_query: str):
+        """Thread para buscar especies por nombre"""
+        try:
+            # Use DataManager to search by name
+            especies_encontradas = self.data_manager.search_species_by_name(name_query, exact_match=False)
+            
+            if especies_encontradas:
+                # Update UI in main thread
+                self.content_area.parent.after(0, self._mostrar_especies, especies_encontradas, f"Search results for: '{name_query}'")
+            else:
+                self.content_area.parent.after(0, self._mostrar_sin_resultados_nombre, name_query)
+                
+        except Exception as e:
+            self.content_area.parent.after(0, self.logger.error, f"Error searching by name '{name_query}': {e}")
+    
+    def _mostrar_sin_resultados_nombre(self, name_query: str):
+        """Mostrar mensaje cuando no se encuentran especies por nombre"""
+        # Limpiar display actual
+        for widget in self.especies_scroll.winfo_children():
+            widget.destroy()
+        
+        # Mensaje de no encontrado
+        no_data_frame = ctk.CTkFrame(self.especies_scroll)
+        no_data_frame.pack(fill="x", padx=5, pady=20)
+        
+        no_data_label = ctk.CTkLabel(
+            no_data_frame,
+            text=f"🔍 No species found matching: '{name_query}'",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color=self.theme_manager.obtener_color('warning')
+        )
+        no_data_label.pack(pady=20)
+        
+        # Sugerencia de búsqueda
+        suggestion_label = ctk.CTkLabel(
+            no_data_frame,
+            text="💡 Try searching with different keywords or check spelling",
+            font=ctk.CTkFont(size=12),
+            text_color=self.theme_manager.obtener_color('secondary')
+        )
+        suggestion_label.pack(pady=5)
+        
+        # Botón para ver todas las especies
+        ctk.CTkButton(
+            no_data_frame,
+            text="🌳 View All Species",
+            command=self.ver_todas,
+            **self.theme_manager.obtener_estilo_boton("primary")
+        ).pack(pady=10)
+        
+        self.logger.warning(f"No species found matching: '{name_query}'")

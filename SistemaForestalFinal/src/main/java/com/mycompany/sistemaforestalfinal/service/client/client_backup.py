@@ -37,10 +37,9 @@ class ForestManagementClient:
         
         # Configurar tema moderno mejorado
         self._setup_modern_theme()
-        
-        # Inicializar componentes core
+          # Inicializar componentes core
         self.soap_client = SOAPClientManager()
-        self.data_manager = DataManager(self.soap_client)
+        self.data_manager = DataManager()  # DataManager uses its own SOAP client with zeep
           # Estado de la aplicación
         self.current_species_list = []
         self.current_zones_list = []
