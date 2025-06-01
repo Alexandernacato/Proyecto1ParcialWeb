@@ -99,86 +99,57 @@ if (-not (Test-Path "venv")) {
     }
 }
 
-# Activar el entorno virtual
 Write-Host "Activando entorno virtual..." -ForegroundColor Cyan
-$venvActivateScript = ".\venv\Scripts\Activate.ps1"
-
-if (Test-Path $venvActivateScript) {
-    try {
-        # Cambiar política de ejecución temporalmente si es necesario
-        $currentPolicy = Get-ExecutionPolicy -Scope CurrentUser
-        if ($currentPolicy -eq "Restricted") {
-            Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-        }
-        
-        & $venvActivateScript
-        Write-Host "   Entorno virtual activado correctamente" -ForegroundColor Green
-    } catch {
-        Write-Host "ERROR activando entorno virtual: $($_.Exception.Message)" -ForegroundColor Red
-        exit 1
-    }
-} else {
-    Write-Host "ERROR: Script de activación no encontrado en: $venvActivateScript" -ForegroundColor Red
-    exit 1
-}
-
-# Verificar Python en el entorno virtual
 try {
-    $pythonVersion = python --version 2>&1
-    Write-Host "   Python en venv: $pythonVersion" -ForegroundColor Green
+    . .\\venv\\Scripts\\Activate.ps1
+    Write-Host "Entorno virtual activado." -ForegroundColor Green
 } catch {
-    Write-Host "ERROR con Python en entorno virtual: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "ERROR: No se pudo activar el entorno virtual." -ForegroundColor Red
+    Write-Host $_.Exception.Message
+    # Detener jobs de servicios si la activación falla
+    Get-Job | Stop-Job | Remove-Job
     exit 1
 }
 
-# Instalar/actualizar dependencias
-if (Test-Path "requirements.txt") {
-    Write-Host "Instalando/actualizando dependencias..." -ForegroundColor Cyan
-    pip install --upgrade pip --quiet
-    pip install -r requirements.txt --quiet
-    
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "   Dependencias instaladas correctamente" -ForegroundColor Green
-    } else {
-        Write-Host "ADVERTENCIA: Hubo problemas instalando algunas dependencias" -ForegroundColor Yellow
-    }
+Write-Host "Instalando dependencias desde requirements.txt..." -ForegroundColor Cyan
+python -m pip install -r requirements.txt
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: No se pudieron instalar las dependencias de Python." -ForegroundColor Red
+    Get-Job | Stop-Job | Remove-Job # Detener jobs de servicios
+    exit 1
+}
+Write-Host "Dependencias instaladas." -ForegroundColor Green
+
+Write-Host "Configurando consola para UTF-8..." -ForegroundColor Cyan
+$OriginalConsoleEncoding = [Console]::OutputEncoding
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$env:PYTHONIOENCODING = "utf-8" # Tell Python to use UTF-8
+
+Write-Host "Iniciando cliente Python GUI..." -ForegroundColor Cyan
+# Ejecutar el cliente Python y capturar su salida.
+$pythonOutput = python .\\SistemaForestalFinal\\src\\main\\java\\com\\mycompany\\sistemaforestalfinal\\service\\client\\client.py 2>&1 | Tee-Object -Variable pythonExecutionOutput | Out-String
+# $LASTEXITCODE will contain the exit code of the python script
+
+Write-Host "--- Salida del Cliente Python ---" -ForegroundColor Magenta
+Write-Host $pythonExecutionOutput
+Write-Host "--- Fin de Salida del Cliente Python ---" -ForegroundColor Magenta
+
+# Restaurar la codificación original de la consola y limpiar la variable de entorno
+[Console]::OutputEncoding = $OriginalConsoleEncoding
+Remove-Item Env:\\PYTHONIOENCODING -ErrorAction SilentlyContinue
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: El cliente Python terminó con errores (código: $LASTEXITCODE)." -ForegroundColor Red
 } else {
-    Write-Host "ADVERTENCIA: No se encontró requirements.txt" -ForegroundColor Yellow
+    Write-Host "Cliente Python GUI cerrado (código: $LASTEXITCODE)." -ForegroundColor Yellow
 }
 
-# 7. Iniciar cliente GUI
-$clientPath = ".\SistemaForestalFinal\src\main\java\com\mycompany\sistemaforestalfinal\service\client\client.py"
+# 7. Detener servicios SOAP y limpiar jobs
+Write-Host "Deteniendo servicios SOAP..." -ForegroundColor Yellow
+Get-Job | Stop-Job
+Get-Job | Remove-Job
 
-if (Test-Path $clientPath) {
-    Write-Host "Iniciando cliente GUI..." -ForegroundColor Green
-    Write-Host "El cliente mostrara errores en su propia ventana" -ForegroundColor Cyan
-    Start-Process python -ArgumentList $clientPath -WindowStyle Normal
-    
-    Write-Host ""    Write-Host "=== SISTEMA INICIADO CORRECTAMENTE ===" -ForegroundColor Green
-    Write-Host "Servicio Species: http://localhost:8282/TreeSpeciesCrudService?wsdl" -ForegroundColor Cyan
-    Write-Host "Servicio Zones: http://localhost:8081/SistemaForestalFinal/ZoneCrudService?wsdl" -ForegroundColor Cyan
-    Write-Host "Cliente GUI: Ejecutandose en ventana separada" -ForegroundColor Cyan
-    Write-Host "Log de errores: client_debug.log" -ForegroundColor Cyan
-    Write-Host ""
-    Write-Host "Para detener los servidores:" -ForegroundColor Yellow
-    Write-Host "   Get-Job | Stop-Job; Get-Job | Remove-Job" -ForegroundColor Yellow
-    Write-Host ""    Write-Host "Presiona cualquier tecla para salir (los servidores seguiran ejecutandose)..." -ForegroundColor White
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    
-    # Desactivar entorno virtual
-    if (Get-Command "deactivate" -ErrorAction SilentlyContinue) {
-        deactivate
-        Write-Host "Entorno virtual desactivado" -ForegroundColor Cyan
-    }
-    
-} else {
-    Write-Host "ERROR: Cliente no encontrado en: $clientPath" -ForegroundColor Red
-    Write-Host "Deteniendo servidores..." -ForegroundColor Yellow
-    Get-Job | Stop-Job; Get-Job | Remove-Job
-    
-    # Desactivar entorno virtual
-    if (Get-Command "deactivate" -ErrorAction SilentlyContinue) {
-        deactivate
-        Write-Host "Entorno virtual desactivado" -ForegroundColor Cyan
-    }
-}
+Write-Host "=== SISTEMA FORESTAL - FINALIZADO ===" -ForegroundColor Green
+
+Write-Host "Presiona Enter para finalizar el script..."
+Read-Host

@@ -82,7 +82,7 @@ class SpeciesManager:
         botones = [
             ("➕ Add", self.crear, "success"),
             ("✏️ Edit", self.editar, "warning"),
-            ("🗑️ Delete", self.eliminar, "error")
+           
         ]
         
         for texto, comando, tipo in botones:
@@ -119,42 +119,6 @@ class SpeciesManager:
         )
         self.search_type.pack(side="left", padx=5)
         self.search_type.set("Name")
-        
-        # Search button
-        ctk.CTkButton(
-            search_frame,
-            text="🔍",
-            width=35,
-            command=self._buscar,
-            **self.theme_manager.obtener_estilo_boton("info")
-        ).pack(side="left", padx=5)
-        
-        # Clear search button
-        ctk.CTkButton(
-            search_frame,
-            text="🗑️",
-            width=35,
-            command=self._limpiar_busqueda,
-            **self.theme_manager.obtener_estilo_boton("warning")
-        ).pack(side="left", padx=5)
-        
-        # Search by ID specific input
-        self.search_id_frame = ctk.CTkFrame(search_frame, fg_color="transparent")
-        self.search_id_frame.pack(side="left", padx=10)
-        
-        ctk.CTkLabel(
-            self.search_id_frame,
-            text="ID:",
-            font=ctk.CTkFont(size=12, weight="bold")
-        ).pack(side="left", padx=(0, 5))
-        
-        self.search_id_entry = ctk.CTkEntry(
-            self.search_id_frame,
-            placeholder_text="Enter ID",
-            width=100,
-            height=35
-        )
-        self.search_id_entry.pack(side="left")
     
     def _crear_lista_especies(self, parent):
         """Crear lista scrollable de especies"""

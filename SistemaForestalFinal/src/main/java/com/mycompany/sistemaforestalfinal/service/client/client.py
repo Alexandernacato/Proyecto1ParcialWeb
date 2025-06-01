@@ -56,15 +56,15 @@ class ForestManagementClient:
 def main():
     """Función principal del sistema"""
     try:
-        print("🌳 Starting Modern Forest Species Management System...")
-        print("📦 Loading modular architecture...")
+        print("Starting Modern Forest Species Management System...")
+        print("Loading modular architecture...")
         
         # Crear y ejecutar aplicación
         app = ForestManagementClient()
         app.ejecutar()
         
     except Exception as e:
-        print(f"❌ Failed to start application: {e}")
+        print(f"Failed to start application: {e}")
         return 1
     
     return 0

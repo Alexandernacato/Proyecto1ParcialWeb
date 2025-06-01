@@ -87,7 +87,7 @@ class ZonesManager:
         botones = [
             ("➕ Add", self.crear, "success"),
             ("✏️ Edit", self._editar_zona_seleccionada, "warning"), # Changed to a new method
-            ("🗑️ Delete", self.eliminar, "error")
+            
         ]
 
         for texto, comando, tipo in botones:
@@ -220,8 +220,7 @@ class ZonesManager:
                 self.zones_content,
                 text="🌍 Use the buttons above to manage zones",
                 font=ctk.CTkFont(size=16),
-                text_color=self.theme_manager.obtener_color('text_secondary')
-            )
+                text_color=self.theme_manager.obtener_color('text_secondary')            )
             initial_label.pack(pady=50)
     
     def ver_todas(self):
@@ -238,11 +237,12 @@ class ZonesManager:
             # Actualizar UI en el hilo principal
             if hasattr(self.content_area, 'parent'):
                 self.content_area.parent.after(0, self._mostrar_zonas, zonas_lista)
+                
         except Exception as e:
             if hasattr(self.content_area, 'parent'):
                 self.content_area.parent.after(0, self.logger.error, f"Error loading zones: {e}")
     
-    def _mostrar_zonas(self, zonas_lista):
+    def _mostrar_zonas(self, zonas_lista, titulo="Zones List"):
         """Mostrar lista de zonas en la interfaz"""
         try:
             if not self.zones_content:
@@ -256,12 +256,11 @@ class ZonesManager:
             if not zonas_lista:
                 self._mostrar_sin_zonas()
                 return
-            
-            # Mostrar zonas en diseño de tarjetas
+              # Mostrar zonas en diseño de tarjetas
             for zona in zonas_lista:
                 self._crear_tarjeta_zona(zona)
             
-            self.logger.success(f"✅ Displayed {len(zonas_lista)} zones")
+            self.logger.success(f"✅ {titulo}: Displayed {len(zonas_lista)} zones")
             
         except Exception as e:
             self.logger.error(f"Error displaying zones list: {e}")
@@ -450,141 +449,9 @@ class ZonesManager:
     
     def _on_zone_updated_error(self, error_msg: str):
         """Callback para error en actualización de zona"""
-        self.logger.error(f"❌ Error updating zone: {error_msg}")
         messagebox.showerror("Error", f"Failed to update zone: {error_msg}")
-    
-    def eliminar(self):
-        """Eliminar zona seleccionada"""
-        self.logger.info("🗑️ Select zone to delete...")
-        
-        if not self.zonas_actuales:
-            messagebox.showwarning("No Zones", "No zones available to delete. Please load zones first.")
-            return
-        
-        # Show selection dialog
-        self._show_zone_selection_dialog()
-    
-    def _show_zone_selection_dialog(self):
-        """Mostrar diálogo de selección de zona para eliminar"""
-        try:
-            parent_window = self._get_parent_window()
-            if not parent_window:
-                return
-            
-            # Create selection dialog
-            dialog = ctk.CTkToplevel(parent_window)
-            dialog.title("Select Zone to Delete")
-            dialog.geometry("400x500")
-            dialog.resizable(False, False)
-            dialog.transient(parent_window)
-            dialog.grab_set()
-            
-            # Center dialog
-            dialog.update_idletasks()
-            x = (dialog.winfo_screenwidth() // 2) - (400 // 2)
-            y = (dialog.winfo_screenheight() // 2) - (500 // 2)
-            dialog.geometry(f"400x500+{x}+{y}")
-            
-            # Title
-            title_label = ctk.CTkLabel(
-                dialog,
-                text="Select Zone to Delete",
-                font=ctk.CTkFont(size=18, weight="bold")
-            )
-            title_label.pack(pady=20)
-            
-            # Zones list
-            zones_frame = ctk.CTkScrollableFrame(dialog)
-            zones_frame.pack(fill="both", expand=True, padx=20, pady=10)
-            
-            for zona in self.zonas_actuales:
-                zone_frame = ctk.CTkFrame(zones_frame)
-                zone_frame.pack(fill="x", pady=5)
-                
-                # Zone info
-                info_label = ctk.CTkLabel(
-                    zone_frame,
-                    text=f"ID: {zona.id} - {zona.nombre} ({zona.tipo_bosque})",
-                    font=ctk.CTkFont(size=14)
-                )
-                info_label.pack(side="left", padx=10, pady=10)
-                
-                # Delete button
-                delete_btn = ctk.CTkButton(
-                    zone_frame,
-                    text="🗑️ Delete",
-                    width=80,
-                    height=30,
-                    fg_color="#dc2626",
-                    hover_color="#b91c1c",
-                    command=lambda z=zona: [dialog.destroy(), self._eliminar_zona(z)]
-                )
-                delete_btn.pack(side="right", padx=10, pady=10)
-            
-            # Cancel button
-            cancel_btn = ctk.CTkButton(
-                dialog,
-                text="Cancel",
-                command=dialog.destroy,
-                width=100,
-                height=35,
-                fg_color="transparent",
-                border_width=2,
-                text_color=("gray10", "gray90")
-            )
-            cancel_btn.pack(pady=20)
-            
-        except Exception as e:
-            self.logger.error(f"Error showing zone selection dialog: {e}")
-            messagebox.showerror("Error", f"Could not show zone selection: {str(e)}")
-    
-    def _eliminar_zona(self, zona):
-        """Eliminar zona específica"""
-        self.logger.info(f"🗑️ Deleting zone: {zona.nombre}")
-        
-        # Confirm deletion
-        result = messagebox.askyesno(
-            "Confirm Deletion",
-            f"Are you sure you want to delete the zone '{zona.nombre}'?\n\n"
-            f"Zone Details:\n"
-            f"- ID: {zona.id}\n"
-            f"- Type: {zona.tipo_bosque}\n"
-            f"- Area: {zona.area_ha} hectares\n\n"
-            f"This action cannot be undone."
-        )
-        
-        if result:
-            threading.Thread(target=self._delete_zone_thread, args=(zona,), daemon=True).start()
-    
-    def _delete_zone_thread(self, zona):
-        """Hilo para eliminar zona del servidor"""
-        try:
-            # Delete zone via SOAP
-            success = self.data_manager.delete_zone(zona.id)
-            
-            # Update UI in main thread
-            parent = self._get_parent_window()
-            if parent and success:
-                parent.after(0, self._on_zone_deleted_success, zona.nombre)
-                parent.after(0, self.ver_todas)  # Refresh zones list
-            elif parent:
-                parent.after(0, self._on_zone_deleted_error, "Failed to delete zone")
-                
-        except Exception as e:
-            parent = self._get_parent_window()
-            if parent:
-                parent.after(0, self._on_zone_deleted_error, str(e))
-    
-    def _on_zone_deleted_success(self, zone_name: str):
-        """Callback para éxito en eliminación de zona"""
-        self.logger.success(f"✅ Zone '{zone_name}' deleted successfully!")
-        messagebox.showinfo("Success", f"Zone '{zone_name}' has been deleted successfully!")
-    
-    def _on_zone_deleted_error(self, error_msg: str):
-        """Callback para error en eliminación de zona"""
-        self.logger.error(f"❌ Error deleting zone: {error_msg}")
-        messagebox.showerror("Error", f"Failed to delete zone: {error_msg}")
-    
+        self.logger.error(f"❌ Error updating zone: {error_msg}")
+
     def _get_parent_window(self):
         """Obtener ventana padre para diálogos"""
         try:
