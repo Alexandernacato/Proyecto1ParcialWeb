@@ -15,11 +15,11 @@
     <h2 class="text-center mb-4">Lista de Actividades de Conservación</h2>
 <c:choose>
     <c:when test="${sessionScope.userRole eq 'admin'}">
-        <!-- Solo el administrador puede abrir el modal para agregar actividad -->
+      
         <a href="${pageContext.request.contextPath}/conservationactivities?option=new" class="btn btn-primary mb-3" id="abrirModal">Agregar Nueva Actividad</a>    
     </c:when>
     <c:otherwise>
-        <!-- Usuarios no administradores reciben una alerta -->
+      
         <button type="button" class="btn btn-secondary mb-3" onclick="alert('Acceso denegado. Solo los administradores pueden agregar actividades.')">Agregar Nueva Actividad</button>
     </c:otherwise>
 </c:choose>
@@ -62,11 +62,11 @@
                     <td>
                         <c:choose>
     <c:when test="${sessionScope.userRole eq 'admin'}">
-        <!-- Solo los administradores pueden editar -->
+      
         <a href="${pageContext.request.contextPath}/conservationactivities?option=update&id=${ca.id}" class="btn btn-warning btn-sm editarBtn">Editar</a>
     </c:when>
     <c:otherwise>
-        <!-- Los usuarios no administradores no tienen acceso a editar -->
+      
         <button type="button" class="btn btn-warning btn-sm" onclick="alert('Acceso denegado. Solo los administradores pueden editar actividades.')">Editar</button>
     </c:otherwise>
 </c:choose>
@@ -88,7 +88,7 @@
     </table>
 </div>
 
-<!-- Modal -->
+
 <div class="modal fade" id="modalFormulario" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" id="contenidoModal"></div>

@@ -63,11 +63,11 @@
 </c:choose>
                         <c:choose>
     <c:when test="${sessionScope.userRole eq 'admin'}">
-        <!-- Solo los administradores pueden eliminar -->
+      
         <a href="${pageContext.request.contextPath}/zones?option=delete&id=${zone.id}" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar esta zona?')">Eliminar</a>
     </c:when>
     <c:otherwise>
-        <!-- Los usuarios no administradores no tienen acceso a eliminar -->
+      
         <button type="button" class="btn btn-danger btn-sm" onclick="alert('Acceso denegado. Solo los administradores pueden eliminar zonas.')">Eliminar</button>
     </c:otherwise>
 </c:choose>
@@ -78,7 +78,7 @@
     </table>
 </div>
 
-<!-- Modal para formulario -->
+
 <div class="modal fade" id="modalFormulario" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" id="contenidoModal"></div>

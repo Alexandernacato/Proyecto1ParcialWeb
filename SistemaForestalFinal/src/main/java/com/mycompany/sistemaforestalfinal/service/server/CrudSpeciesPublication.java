@@ -5,11 +5,11 @@ public class CrudSpeciesPublication {
     
     public static void main(String[] args) {
         try {
-            // URL donde se publicará el servicio SOAP
+          
             String address = "http://localhost:8282/TreeSpeciesCrudService";
-              // Crear una instancia del servicio
+             
             CrudSpeciesService service = new CrudSpeciesService();            
-            // Publicar el servicio
+          
             Endpoint.publish(address, service);
             
             System.out.println("=== Servicio SOAP de CRUD de Especies Forestales ===");
@@ -27,7 +27,7 @@ public class CrudSpeciesPublication {
             System.out.println("=====================================================");
             System.out.println("Presiona Ctrl+C para detener el servicio...");
             
-            // Mantener el servicio en ejecución
+          
             while (true) {
                 Thread.sleep(1000);
             }
@@ -39,9 +39,7 @@ public class CrudSpeciesPublication {
             e.printStackTrace();
         }
     }
-      /**
-     * Método para detener el servicio (puede ser usado desde otros lugares)
-     */
+    
     public static void stopService() {
         System.out.println("Deteniendo servicio SOAP CRUD...");
         System.exit(0);

@@ -23,7 +23,7 @@ public class ReportesController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null) {
+        if (session == null || session.getAttribute("usuario") == null) {
             response.sendRedirect("login.jsp");
             return;
         }
@@ -55,8 +55,7 @@ public class ReportesController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error al cargar datos para el dashboard: " + e.getMessage());
+            request.getRequestDispatcher("/reportes.jsp").forward(request, response);
         }
     }
 }
-
-

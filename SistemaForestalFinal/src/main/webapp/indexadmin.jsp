@@ -6,54 +6,46 @@
     <meta charset="UTF-8">
     <title>Panel de Administración</title>
 
-    <!-- Estilos propios -->
+   
     <link rel="stylesheet" href="css/indexadmin.css">
 
-    <!-- Iconos y Frameworks -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
 
-<!-- DASHBOARD -->
+
 <main class="admin-dashboard container mt-5">
     <h1 class="mb-4 text-center"><i class="fas fa-tachometer-alt"></i> Panel de Administración</h1>
 
-    <div class="row g-4 mb-5">
-        <!-- Tarjeta 1 -->
-        <div class="col-md-4">
-            <div class="card dash-card bg-primary text-white shadow">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-chart-pie"></i> Reportes</h5>
-                    <p class="card-text">Estadísticas detalladas de conservación, reforestación y más.</p>
-                    <a href="${pageContext.request.contextPath}/reportes" class="btn btn-light">Ver más</a>
-                </div>
-            </div>
-        </div>
-        <!-- Tarjeta 2 -->
-        <div class="col-md-4">
-            <div class="card dash-card bg-success text-white shadow">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-users-cog"></i> Gestión de Usuarios</h5>
-                    <p class="card-text">Permisos, roles y perfiles del sistema.</p>
-                    <a href="${pageContext.request.contextPath}/usuarios" class="btn btn-light">Administrar</a>
-                </div>
-            </div>
-        </div>
-        <!-- Tarjeta 3 -->
-        <div class="col-md-4">
-            <div class="card dash-card bg-warning text-dark shadow">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-tasks"></i> Actividades</h5>
-                    <p class="card-text">Control de campañas de conservación y plantaciones.</p>
-                    <a href="${pageContext.request.contextPath}/conservationactivities" class="btn btn-dark">Ver Actividades</a>
-                </div>
+<div class="row g-4 mb-5 justify-content-center">
+    <!-- Tarjeta 1 -->
+    <div class="col-md-4">
+        <div class="card dash-card bg-primary text-white shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-chart-pie"></i> Reportes</h5>
+                <p class="card-text">Estadísticas detalladas de conservación, reforestación y más.</p>
+                <a href="${pageContext.request.contextPath}/reportes" class="btn btn-light">Ver más</a>
             </div>
         </div>
     </div>
 
-    <!-- Segunda fila -->
+    <!-- Tarjeta 2 -->
+    <div class="col-md-4">
+        <div class="card dash-card bg-warning text-dark shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-tasks"></i> Actividades</h5>
+                <p class="card-text">Control de campañas de conservación y plantaciones.</p>
+                <a href="${pageContext.request.contextPath}/conservationactivities" class="btn btn-dark">Ver Actividades</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+   
     <div class="row g-4">
         <!-- Zonas -->
         <div class="col-md-6">
@@ -66,7 +58,7 @@
             </div>
         </div>
 
-        <!-- Especies -->
+       
         <div class="col-md-6">
             <div class="card dash-card bg-secondary text-white shadow">
                 <div class="card-body">
@@ -82,7 +74,7 @@
     <div class="container">
         <div class="row">
 
-            <!-- Misión -->
+           
             <div class="col-md-4 mb-4">
                 <h5 class="footer-title">Nuestra Misión</h5>
                 <p>
@@ -91,7 +83,7 @@
                 </p>
             </div>
 
-            <!-- Enlaces Útiles -->
+            
             <div class="col-md-3 mb-4">
                 <h5 class="footer-title">Enlaces Rápidos</h5>
                 <ul class="footer-links list-unstyled">
@@ -103,7 +95,7 @@
                 </ul>
             </div>
 
-            <!-- Contacto -->
+          
             <div class="col-md-5 mb-4">
                 <h5 class="footer-title">Contacto</h5>
                 <p><i class="fas fa-map-marker-alt"></i> Avenida Bosque Verde 123, Quito, Ecuador</p>

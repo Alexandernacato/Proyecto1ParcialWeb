@@ -21,7 +21,7 @@
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link <%= path.equals("/reportes") ? "active" : "" %>" href="${pageContext.request.contextPath}/reportes"><i class="fas fa-chart-line"></i> Reportes</a></li>
-                <li class="nav-item"><a class="nav-link <%= path.equals("/usuarios") ? "active" : "" %>" href="${pageContext.request.contextPath}/usuarios"><i class="fas fa-users-cog"></i> Usuarios</a></li>
+               
                 <li class="nav-item"><a class="nav-link <%= path.equals("/conservationactivities") ? "active" : "" %>" href="${pageContext.request.contextPath}/conservationactivities"><i class="fas fa-leaf"></i> Actividades de Conservación</a></li>
                 <li class="nav-item"><a class="nav-link <%= path.equals("/zones") ? "active" : "" %>" href="${pageContext.request.contextPath}/zones"><i class="fas fa-map"></i> Zonas</a></li>
                 <li class="nav-item"><a class="nav-link <%= path.equals("/treespecies") ? "active" : "" %>" href="${pageContext.request.contextPath}/treespecies"><i class="fas fa-seedling"></i> Especies</a></li>
@@ -49,7 +49,7 @@
                 <li class="nav-item"><a class="nav-link <%= path.equals("/reportes") ? "active" : "" %>" href="${pageContext.request.contextPath}/reportes"><i class="fas fa-chart-column"></i> Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link <%= path.equals("/zones") ? "active" : "" %>" href="${pageContext.request.contextPath}/zones"><i class="fas fa-map-marked-alt"></i> Zonas</a></li>
                 <li class="nav-item"><a class="nav-link <%= path.equals("/treespecies") ? "active" : "" %>" href="${pageContext.request.contextPath}/treespecies"><i class="fas fa-seedling"></i> Especies</a></li>
-                <li class="nav-item"><a class="nav-link <%= path.equals("/conservationactivities") ? "active" : "" %>" href="${pageContext.request.contextPath}/ConservationActivities"><i class="fas fa-book-open"></i> Actividades</a></li>
+                <li class="nav-item"><a class="nav-link <%= path.equals("/conservationactivities") ? "active" : "" %>" href="${pageContext.request.contextPath}/conservationactivities"><i class="fas fa-book-open"></i> Actividades</a></li>
                 <li class="nav-item"><a class="nav-link text-danger" href="${pageContext.request.contextPath}/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
             </ul>
         </div>
